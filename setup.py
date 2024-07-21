@@ -13,7 +13,7 @@ LONG_DESCRIPTION = "This SDK is used to provide python utilities to interact wit
 
 # Setting up
 setup(
-    name="pactus",
+    name="pactus-sdk",
     version=VERSION,
     author="Pactus foundation",
     author_email="<info@pactus.org>",

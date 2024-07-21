@@ -9,7 +9,7 @@ You can build apps on the top of Pactus using this SDK with ease in python.
 You can install this packages using `pip`:
 
 ```bash
-pip install pactus
+pip install pactus-sdk
 ```
 
 ## Development
@@ -17,7 +17,7 @@ pip install pactus
 After making any changes, make sure all tests are passing by running:
 
 ```bash
-python test.py
+python pactus/test.py
 ```
 
 Also, make sure you run [linter](https://docs.astral.sh/ruff/) after your change and formatter by running:
