@@ -17,7 +17,7 @@ pip install pactus-sdk
 After making any changes, make sure all tests are passing by running:
 
 ```bash
-python pactus/test.py
+python tests/test.py
 ```
 
 Also, make sure you run [linter](https://docs.astral.sh/ruff/) after your change and formatter by running:

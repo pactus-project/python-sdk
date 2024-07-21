@@ -96,8 +96,6 @@ class TestTransferTx(unittest.TestCase):
         append_fixed_bytes(buf, receiver.bytes())
         append_var_int(buf, amount)
 
-        # print(bytes(buf).hex())
-
         sig = prv.sign(bytes(buf[1:]))  # ignore flags
 
         append_fixed_bytes(buf, sig.bytes())
