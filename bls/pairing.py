@@ -24,10 +24,12 @@ ut_wsq_inv = ~Fq12(p, ut_root, Fq6.zero(p))
 ut_wcu_inv = ~Fq12(p, Fq6.zero(p), ut_root)
 del ut_root
 
+
 def _untwist(R):
-    assert all( isinstance(pp, Fq2) for pp in R )
+    assert all(isinstance(pp, Fq2) for pp in R)
     (x, y, z) = R
     return (x * ut_wsq_inv, y * ut_wcu_inv, z)
+
 
 def _double_eval(R, P):
     (xP, yP) = P
@@ -44,8 +46,9 @@ def _double_eval(R, P):
 
     return (ret_num, ret_den)
 
+
 def _add_eval(R, Q, P):
-    (R, Q) = to_coZ(R, Q)   # common Z value for Q and R
+    (R, Q) = to_coZ(R, Q)  # common Z value for Q and R
     (xP, yP) = P
     (xR, yR, zR) = _untwist(R)
     (xQ, yQ, zQ) = _untwist(Q)
@@ -66,13 +69,16 @@ def _add_eval(R, Q, P):
 
     return (ret_num, ret_den)
 
+
 def _miller_loop(T, P, Q):
     if len(P) == 3:
         P = from_jacobian(P)
     res_num = Fq12.one(p)
     res_den = Fq12.one(p)
     R = Q
-    T_bits = [ 1 if b == '1' else 0 for b in bin(T)[3:] ]   # all except MSB in MSB-to-LSB order
+    T_bits = [
+        1 if b == "1" else 0 for b in bin(T)[3:]
+    ]  # all except MSB in MSB-to-LSB order
     for b in T_bits:
         (d_num, d_den) = _double_eval(R, P)
         res_num = pow(res_num, 2) * d_num
@@ -85,6 +91,7 @@ def _miller_loop(T, P, Q):
             R = point_add(R, Q)
     return res_num / res_den
 
+
 def _final_exp(elm):
     assert isinstance(elm, Fq12)
     ret = pow(elm, k_final)
@@ -92,12 +99,18 @@ def _final_exp(elm):
     ret = ret.qi_power(6) / ret
     return ret
 
+
 def pairing(P, Q):
-    assert all( isinstance(pp, Fq) for pp in P )
-    assert all( isinstance(pp, Fq2) for pp in Q )
+    assert all(isinstance(pp, Fq) for pp in P)
+    assert all(isinstance(pp, Fq2) for pp in Q)
     return _final_exp(_miller_loop(abs(ell_u), P, Q))
 
+
 def multi_pairing(Ps, Qs):
-    assert all( isinstance(pp, Fq) for P in Ps for pp in P )
-    assert all( isinstance(pp, Fq2) for Q in Qs for pp in Q )
-    return _final_exp(reduce(mul, ( _miller_loop(abs(ell_u), P, Q) for (P, Q) in zip(Ps, Qs) ), Fq12.one(p)))
+    assert all(isinstance(pp, Fq) for P in Ps for pp in P)
+    assert all(isinstance(pp, Fq2) for Q in Qs for pp in Q)
+    return _final_exp(
+        reduce(
+            mul, (_miller_loop(abs(ell_u), P, Q) for (P, Q) in zip(Ps, Qs)), Fq12.one(p)
+        )
+    )

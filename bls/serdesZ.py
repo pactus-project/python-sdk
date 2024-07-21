@@ -19,11 +19,14 @@ F1_zero = Fq.zero(p)
 F2_one = Fq2.one(p)
 F2_zero = Fq2.zero(p)
 
+
 class DeserError(Exception):
     pass
 
+
 class SerError(Exception):
     pass
+
 
 def serialize(P, compressed=True):
     if isinstance(P[0], Fq):
@@ -32,12 +35,13 @@ def serialize(P, compressed=True):
         return _serialize_help(P, compressed, _to_bytes_F2, 96, _gx2)
     raise SerError("cannot serialize " + str(P))
 
+
 def _serialize_help(P, compressed, to_bytes, clen, g):
     # point at infinity
     if P[2] == 0:
         if compressed:
-            return b'\xc0' + b'\x00' * (clen - 1)
-        return b'\x40' + b'\x00' * (2 * clen - 1)
+            return b"\xc0" + b"\x00" * (clen - 1)
+        return b"\x40" + b"\x00" * (2 * clen - 1)
 
     (x, y) = from_jacobian(P)
     if pow(y, 2) != g(x):
@@ -48,25 +52,38 @@ def _serialize_help(P, compressed, to_bytes, clen, g):
         return struct.pack("=" + "B" * 2 * clen, *(x_str + to_bytes(y)))
 
     y_neg = sgn0_be(y) < 0
-    tag_bits = 0xa0 if y_neg else 0x80
+    tag_bits = 0xA0 if y_neg else 0x80
     x_str[0] = x_str[0] | tag_bits
     return struct.pack("=" + "B" * clen, *x_str)
 
+
 def deserialize(sp, is_ell2=False):
     if not is_ell2:
-        return _deserialize_help(sp, _from_bytes_F1, 48, _gx1, lambda x: pow(x, (p + 1) // 4), F1_zero, F1_one)
+        return _deserialize_help(
+            sp,
+            _from_bytes_F1,
+            48,
+            _gx1,
+            lambda x: pow(x, (p + 1) // 4),
+            F1_zero,
+            F1_one,
+        )
     return _deserialize_help(sp, _from_bytes_F2, 96, _gx2, sqrt_F2, F2_zero, F2_one)
+
 
 def _deserialize_help(sp, from_bytes, clen, g, sqrt_fn, zero, one):
     data = list(struct.unpack("=" + "B" * len(sp), sp))
-    (tag, data[0]) = (data[0] >> 5, data[0] & 0x1f)
+    (tag, data[0]) = (data[0] >> 5, data[0] & 0x1F)
     if tag in (0b001, 0b011, 0b111):
         raise DeserError("cannot deserialize value with invalid tag: %d" % tag)
 
     if tag == 0b000:
         # uncompressed point
         if len(data) != 2 * clen:
-            raise DeserError("invalid uncompresed point: length must be %d, got %d" % (2 * clen, len(data)))
+            raise DeserError(
+                "invalid uncompresed point: length must be %d, got %d"
+                % (2 * clen, len(data))
+            )
         x = from_bytes(data[:clen])
         y = from_bytes(data[clen:])
 
@@ -78,15 +95,21 @@ def _deserialize_help(sp, from_bytes, clen, g, sqrt_fn, zero, one):
         # point at infinity
         expected_len = 2 * clen if tag == 0b010 else clen
         if len(data) != expected_len:
-            raise DeserError("invalid point at infinity: length must be %d, got %d" % (expected_len, len(data)))
-        if any( d != 0 for d in data ):
+            raise DeserError(
+                "invalid point at infinity: length must be %d, got %d"
+                % (expected_len, len(data))
+            )
+        if any(d != 0 for d in data):
             raise DeserError("invalid point at infinity: must be all 0s other than tag")
         return (zero, one, zero)
 
     if tag in (0b100, 0b101):
         # compressed point
         if len(data) != clen:
-            raise DeserError("invalid compressed point: length must be %d, got %d" % (clen, len(data)))
+            raise DeserError(
+                "invalid compressed point: length must be %d, got %d"
+                % (clen, len(data))
+            )
         x = from_bytes(data)
 
         # recompute y
@@ -102,20 +125,23 @@ def _deserialize_help(sp, from_bytes, clen, g, sqrt_fn, zero, one):
 
     raise DeserError("invalid tag %d" % tag)
 
+
 def _to_bytes_F1(elm):
     if not isinstance(elm, Fq):
         raise SerError("value must be an element of Fq")
     ret = [0] * 48
     val = elm
     for idx in reversed(range(0, 48)):
-        ret[idx] = val & 0xff
+        ret[idx] = val & 0xFF
         val = val >> 8
     return ret
+
 
 def _to_bytes_F2(elm):
     if not isinstance(elm, Fq2):
         raise SerError("value must be an element of Fq2")
     return _to_bytes_F1(elm[1]) + _to_bytes_F1(elm[0])
+
 
 def _from_bytes_F1(data):
     assert len(data) == 48
@@ -127,15 +153,19 @@ def _from_bytes_F1(data):
         raise DeserError("invalid encoded value: not a residue mod p")
     return Fq(p, ret)
 
+
 def _from_bytes_F2(data):
     assert len(data) == 96
     return Fq2(p, _from_bytes_F1(data[48:]), _from_bytes_F1(data[:48]))
 
+
 def _gx1(x):
     return pow(x, 3) + 4
 
+
 def _gx2(x):
     return pow(x, 3) + Fq2(p, 4, 4)
+
 
 if __name__ == "__main__":
     import binascii
@@ -213,26 +243,31 @@ if __name__ == "__main__":
     def main():
         for Pinf in ((F1_zero, F1_one, F1_zero), (F2_zero, F2_one, F2_zero)):
             test_ell(Pinf)
-            sys.stdout.write('.')
+            sys.stdout.write(".")
             sys.stdout.flush()
 
         for _ in range(0, 32):
-            sys.stdout.write('.')
+            sys.stdout.write(".")
             sys.stdout.flush()
             test_ell(opt_swu_map(Fq(p, random.getrandbits(380))))
-            test_ell(opt_swu2_map(Fq2(p, random.getrandbits(380), random.getrandbits(380))))
+            test_ell(
+                opt_swu2_map(Fq2(p, random.getrandbits(380), random.getrandbits(380)))
+            )
 
-        for (ell2, invals) in ((False, invalid_inputs_1), (True, invalid_inputs_2)):
+        for ell2, invals in ((False, invalid_inputs_1), (True, invalid_inputs_2)):
             curve_name = "E2" if ell2 else "E1"
-            for (idx, inval) in enumerate(invals):
+            for idx, inval in enumerate(invals):
                 try:
                     deserialize(binascii.unhexlify(inval), ell2)
                 except DeserError:
-                    sys.stdout.write('*')
+                    sys.stdout.write("*")
                     sys.stdout.flush()
                 else:
-                    raise DeserError("expected failed deserialization of #%d on %s" % (idx, curve_name))
+                    raise DeserError(
+                        "expected failed deserialization of #%d on %s"
+                        % (idx, curve_name)
+                    )
 
-        sys.stdout.write('\n')
+        sys.stdout.write("\n")
 
     main()
