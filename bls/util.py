@@ -13,6 +13,7 @@ from consts import q
 from curve_ops import g1gen, g2gen, from_jacobian
 from serdesZ import serialize, deserialize, SerError, DeserError
 
+
 @unique
 class SigType(Enum):
     basic = 1
@@ -21,12 +22,13 @@ class SigType(Enum):
 
     def __bytes__(self):
         if self is SigType.basic:
-            return b'NUL'
+            return b"NUL"
         if self is SigType.message_augmentation:
-            return b'AUG'
+            return b"AUG"
         if self is SigType.proof_of_possession:
-            return b'POP'
+            return b"POP"
         raise RuntimeError("unknown SigType")
+
 
 class Options(object):
     run_tests = False
@@ -39,11 +41,16 @@ class Options(object):
     def __init__(self):
         self.test_inputs = []
 
+
 def _read_test_file(filename):
     ret = []
     with open(filename, "r") as test_file:
-        ret += [ tuple( unhexlify(val) for val in line.strip().split(' ') ) for line in test_file.readlines() ]
+        ret += [
+            tuple(unhexlify(val) for val in line.strip().split(" "))
+            for line in test_file.readlines()
+        ]
     return ret
+
 
 def get_cmdline_options():
     sk = bytes("11223344556677889900112233445566", "ascii")
@@ -55,10 +62,13 @@ def get_cmdline_options():
         (opts, args) = getopt.gnu_getopt(sys.argv[1:], "k:T:tvqBAPg")
 
     except getopt.GetoptError as err:
-        print("Usage: %s [-gqtv] [-k key] [-T test_file] [-B | -A | -P] [msg ...]" % sys.argv[0])
+        print(
+            "Usage: %s [-gqtv] [-k key] [-T test_file] [-B | -A | -P] [msg ...]"
+            % sys.argv[0]
+        )
         sys.exit(str(err))
 
-    for (opt, arg) in opts:
+    for opt, arg in opts:
         if opt == "-k":
             sk = os.fsencode(arg)
 
@@ -90,11 +100,12 @@ def get_cmdline_options():
             raise RuntimeError("got unexpected option %s from getopt" % opt)
 
     # build up return value: (msg, sk) tuples from cmdline and test files
-    ret.test_inputs += [ (os.fsencode(arg), sk) for arg in args ]
+    ret.test_inputs += [(os.fsencode(arg), sk) for arg in args]
     if not ret.test_inputs:
-        ret.test_inputs = [ (msg_dflt, sk) ]
+        ret.test_inputs = [(msg_dflt, sk)]
 
     return ret
+
 
 def print_g1_hex(P, margin=8):
     indent_str = " " * margin
@@ -103,16 +114,19 @@ def print_g1_hex(P, margin=8):
     print(indent_str, "x = 0x%x" % P[0])
     print(indent_str, "y = 0x%x" % P[1])
 
+
 def print_f2_hex(vv, name, margin=8):
     indent_str = " " * margin
     print(indent_str + name + "0 = 0x%x" % vv[0])
     print(indent_str + name + "1 = 0x%x" % vv[1])
 
+
 def print_g2_hex(P, margin=8):
     if len(P) == 3:
         P = from_jacobian(P)
-    print_f2_hex(P[0], 'x', margin)
-    print_f2_hex(P[1], 'y', margin)
+    print_f2_hex(P[0], "x", margin)
+    print_f2_hex(P[1], "y", margin)
+
 
 def print_value(iv, indent=8, skip_first=False):
     max_line_length = 111
@@ -136,6 +150,7 @@ def print_value(iv, indent=8, skip_first=False):
         line_length += len(out_str) + 1
     sys.stdout.write("\n")
 
+
 def print_tv_hash(hash_in, ciphersuite, hash_fn, print_pt_fn, is_ell2, opts):
     if len(hash_in) > 2:
         (msg, _, hash_expect) = hash_in[:3]
@@ -146,7 +161,9 @@ def print_tv_hash(hash_in, ciphersuite, hash_fn, print_pt_fn, is_ell2, opts):
     P = hash_fn(msg, ciphersuite)
 
     if opts.gen_vectors:
-        print(b' '.join( hexlify(v) for v in (msg, b'\x00', serialize(P)) ).decode('ascii'))
+        print(
+            b" ".join(hexlify(v) for v in (msg, b"\x00", serialize(P))).decode("ascii")
+        )
         return
 
     if hash_expect is not None:
@@ -171,7 +188,18 @@ def print_tv_hash(hash_in, ciphersuite, hash_fn, print_pt_fn, is_ell2, opts):
 
     print("===============  end hash test vector  ==================")
 
-def print_tv_sig(sig_in, ciphersuite, sign_fn, keygen_fn, print_pk_fn, print_sig_fn, ver_fn, is_ell2, opts):
+
+def print_tv_sig(
+    sig_in,
+    ciphersuite,
+    sign_fn,
+    keygen_fn,
+    print_pk_fn,
+    print_sig_fn,
+    ver_fn,
+    is_ell2,
+    opts,
+):
     if len(sig_in) > 2:
         (msg, sk, sig_expect) = sig_in[:3]
     else:
@@ -185,7 +213,7 @@ def print_tv_sig(sig_in, ciphersuite, sign_fn, keygen_fn, print_pk_fn, print_sig
         raise RuntimeError("verifying generated signature failed")
 
     if opts.gen_vectors:
-        print(b' '.join( hexlify(v) for v in (msg, sk, serialize(sig)) ).decode('ascii'))
+        print(b" ".join(hexlify(v) for v in (msg, sk, serialize(sig))).decode("ascii"))
         return
 
     if sig_expect is not None:
@@ -227,7 +255,18 @@ def print_tv_sig(sig_in, ciphersuite, sign_fn, keygen_fn, print_pk_fn, print_sig
 
     print("==================  end test vector  ====================")
 
-def print_tv_pop(sig_in, ciphersuite, sign_fn, keygen_fn, print_pk_fn, print_sig_fn, ver_fn, is_ell2, opts):
+
+def print_tv_pop(
+    sig_in,
+    ciphersuite,
+    sign_fn,
+    keygen_fn,
+    print_pk_fn,
+    print_sig_fn,
+    ver_fn,
+    is_ell2,
+    opts,
+):
     if len(sig_in) > 2:
         (_, sk, sig_expect) = sig_in[:3]
     else:
@@ -241,7 +280,9 @@ def print_tv_pop(sig_in, ciphersuite, sign_fn, keygen_fn, print_pk_fn, print_sig
         raise RuntimeError("verifying generated signature failed")
 
     if opts.gen_vectors:
-        print(b' '.join( hexlify(v) for v in (b'\x00', sk, serialize(sig)) ).decode('ascii'))
+        print(
+            b" ".join(hexlify(v) for v in (b"\x00", sk, serialize(sig))).decode("ascii")
+        )
         return
 
     if sig_expect is not None:

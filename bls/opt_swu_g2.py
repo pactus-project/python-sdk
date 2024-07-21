@@ -17,12 +17,13 @@ Ell2p_b = Fq2(p, 1012, 1012)
 
 # eta values, used for computing sqrt(g(X1(t)))
 # For details on how to compute, see ../sage-impl/opt_sswu_g2.sage
-ev1 = 0x699be3b8c6870965e5bf892ad5d2cc7b0e85a117402dfd83b7f4a947e02d978498255a2aaec0ac627b5afbdf1bf1c90
-ev2 = 0x8157cd83046453f5dd0972b6e3949e4288020b5b8a9cc99ca07e27089a2ce2436d965026adad3ef7baba37f2183e9b5
-ev3 = 0xab1c2ffdd6c253ca155231eb3e71ba044fd562f6f72bc5bad5ec46a0b7a3b0247cf08ce6c6317f40edbc653a72dee17
-ev4 = 0xaa404866706722864480885d68ad0ccac1967c7544b447873cc37e0181271e006df72162a3d3e0287bf597fbf7f8fc1
+ev1 = 0x699BE3B8C6870965E5BF892AD5D2CC7B0E85A117402DFD83B7F4A947E02D978498255A2AAEC0AC627B5AFBDF1BF1C90
+ev2 = 0x8157CD83046453F5DD0972B6E3949E4288020B5B8A9CC99CA07E27089A2CE2436D965026ADAD3EF7BABA37F2183E9B5
+ev3 = 0xAB1C2FFDD6C253CA155231EB3E71BA044FD562F6F72BC5BAD5EC46A0B7A3B0247CF08CE6C6317F40EDBC653A72DEE17
+ev4 = 0xAA404866706722864480885D68AD0CCAC1967C7544B447873CC37E0181271E006DF72162A3D3E0287BF597FBF7F8FC1
 etas = (Fq2(p, ev1, ev2), Fq2(p, p - ev2, ev1), Fq2(p, ev3, ev4), Fq2(p, p - ev4, ev3))
 del ev1, ev2, ev3, ev4
+
 
 ###
 ## Simplified SWU map, optimized and adapted to Ell2'
@@ -32,7 +33,7 @@ def osswu2_help(t):
     assert isinstance(t, Fq2)
 
     # first, compute X0(t), detecting and handling exceptional case
-    num_den_common = xi_2 ** 2 * t ** 4 + xi_2 * t ** 2
+    num_den_common = xi_2**2 * t**4 + xi_2 * t**2
     x0_num = Ell2p_b * (num_den_common + 1)
     x0_den = -Ell2p_a * num_den_common
     x0_den = Ell2p_a * xi_2 if x0_den == 0 else x0_den
@@ -47,27 +48,27 @@ def osswu2_help(t):
     # this uses the trick for combining division and sqrt from Section 5 of
     # Bernstein, Duif, Lange, Schwabe, and Yang, "High-speed high-security signatures."
     # J Crypt Eng 2(2):77--89, Sept. 2012. http://ed25519.cr.yp.to/ed25519-20110926.pdf
-    tmp1 = pow(gx0_den, 7)          # v^7
-    tmp2 = gx0_num * tmp1           # u v^7
-    tmp1 = tmp1 * tmp2 * gx0_den    # u v^15
-    sqrt_candidate = tmp2 * pow(tmp1, (p ** 2 - 9) // 16)
+    tmp1 = pow(gx0_den, 7)  # v^7
+    tmp2 = gx0_num * tmp1  # u v^7
+    tmp1 = tmp1 * tmp2 * gx0_den  # u v^15
+    sqrt_candidate = tmp2 * pow(tmp1, (p**2 - 9) // 16)
 
     # check if g(X0(t)) is square and return the sqrt if so
     for root in roots_of_unity:
         y0 = sqrt_candidate * root
-        if y0 ** 2 * gx0_den == gx0_num:
+        if y0**2 * gx0_den == gx0_num:
             # found sqrt(g(X0(t))). force sign of y to equal sign of t
             y0 = sgn0(y0) * sgn0(t) * y0
             assert sgn0(y0) == sgn0(t)
             return (x0_num * x0_den, y0 * pow(x0_den, 3), x0_den)
 
     # if we've gotten here, then g(X0(t)) is not square. convert srqt_candidate to sqrt(g(X1(t)))
-    (x1_num, x1_den) = (xi_2 * t ** 2 * x0_num, x0_den)
-    (gx1_num, gx1_den) = (xi_2 ** 3 * t ** 6 * gx0_num, gx0_den)
-    sqrt_candidate *= t ** 3
+    (x1_num, x1_den) = (xi_2 * t**2 * x0_num, x0_den)
+    (gx1_num, gx1_den) = (xi_2**3 * t**6 * gx0_num, gx0_den)
+    sqrt_candidate *= t**3
     for eta in etas:
         y1 = eta * sqrt_candidate
-        if y1 ** 2 * gx1_den == gx1_num:
+        if y1**2 * gx1_den == gx1_num:
             # found sqrt(g(X1(t))). force sign of y to equal sign of t
             y1 = sgn0(y1) * sgn0(t) * y1
             assert sgn0(y1) == sgn0(t)
@@ -76,43 +77,92 @@ def osswu2_help(t):
     # if we got here, something is wrong
     raise RuntimeError("osswu2_help failed for unknown reasons")
 
+
 ###
 ## 3-Isogeny from Ell2' to Ell2
 ###
 # coefficients for the 3-isogeny map from Ell2' to Ell2
-xnum = ( Fq2(p, 0x5c759507e8e333ebb5b7a9a47d7ed8532c52d39fd3a042a88b58423c50ae15d5c2638e343d9c71c6238aaaaaaaa97d6,
-                0x5c759507e8e333ebb5b7a9a47d7ed8532c52d39fd3a042a88b58423c50ae15d5c2638e343d9c71c6238aaaaaaaa97d6),
-         Fq2(p, 0x0,
-                0x11560bf17baa99bc32126fced787c88f984f87adf7ae0c7f9a208c6b4f20a4181472aaa9cb8d555526a9ffffffffc71a),
-         Fq2(p, 0x11560bf17baa99bc32126fced787c88f984f87adf7ae0c7f9a208c6b4f20a4181472aaa9cb8d555526a9ffffffffc71e,
-                0x8ab05f8bdd54cde190937e76bc3e447cc27c3d6fbd7063fcd104635a790520c0a395554e5c6aaaa9354ffffffffe38d),
-         Fq2(p, 0x171d6541fa38ccfaed6dea691f5fb614cb14b4e7f4e810aa22d6108f142b85757098e38d0f671c7188e2aaaaaaaa5ed1,
-                0x0) )
-xden = ( Fq2(p, 0x0,
-                0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffaa63),
-         Fq2(p, 0xc,
-                0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffaa9f),
-         Fq2(p, 0x1,
-                0x0) )
-ynum = ( Fq2(p, 0x1530477c7ab4113b59a4c18b076d11930f7da5d4a07f649bf54439d87d27e500fc8c25ebf8c92f6812cfc71c71c6d706,
-                0x1530477c7ab4113b59a4c18b076d11930f7da5d4a07f649bf54439d87d27e500fc8c25ebf8c92f6812cfc71c71c6d706),
-         Fq2(p, 0x0,
-                0x5c759507e8e333ebb5b7a9a47d7ed8532c52d39fd3a042a88b58423c50ae15d5c2638e343d9c71c6238aaaaaaaa97be),
-         Fq2(p, 0x11560bf17baa99bc32126fced787c88f984f87adf7ae0c7f9a208c6b4f20a4181472aaa9cb8d555526a9ffffffffc71c,
-                0x8ab05f8bdd54cde190937e76bc3e447cc27c3d6fbd7063fcd104635a790520c0a395554e5c6aaaa9354ffffffffe38f),
-         Fq2(p, 0x124c9ad43b6cf79bfbf7043de3811ad0761b0f37a1e26286b0e977c69aa274524e79097a56dc4bd9e1b371c71c718b10,
-                0x0) )
-yden = ( Fq2(p, 0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffa8fb,
-                0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffa8fb),
-         Fq2(p, 0x0,
-                0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffa9d3),
-         Fq2(p, 0x12,
-                0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffaa99),
-         Fq2(p, 0x1,
-                0x0) )
+xnum = (
+    Fq2(
+        p,
+        0x5C759507E8E333EBB5B7A9A47D7ED8532C52D39FD3A042A88B58423C50AE15D5C2638E343D9C71C6238AAAAAAAA97D6,
+        0x5C759507E8E333EBB5B7A9A47D7ED8532C52D39FD3A042A88B58423C50AE15D5C2638E343D9C71C6238AAAAAAAA97D6,
+    ),
+    Fq2(
+        p,
+        0x0,
+        0x11560BF17BAA99BC32126FCED787C88F984F87ADF7AE0C7F9A208C6B4F20A4181472AAA9CB8D555526A9FFFFFFFFC71A,
+    ),
+    Fq2(
+        p,
+        0x11560BF17BAA99BC32126FCED787C88F984F87ADF7AE0C7F9A208C6B4F20A4181472AAA9CB8D555526A9FFFFFFFFC71E,
+        0x8AB05F8BDD54CDE190937E76BC3E447CC27C3D6FBD7063FCD104635A790520C0A395554E5C6AAAA9354FFFFFFFFE38D,
+    ),
+    Fq2(
+        p,
+        0x171D6541FA38CCFAED6DEA691F5FB614CB14B4E7F4E810AA22D6108F142B85757098E38D0F671C7188E2AAAAAAAA5ED1,
+        0x0,
+    ),
+)
+xden = (
+    Fq2(
+        p,
+        0x0,
+        0x1A0111EA397FE69A4B1BA7B6434BACD764774B84F38512BF6730D2A0F6B0F6241EABFFFEB153FFFFB9FEFFFFFFFFAA63,
+    ),
+    Fq2(
+        p,
+        0xC,
+        0x1A0111EA397FE69A4B1BA7B6434BACD764774B84F38512BF6730D2A0F6B0F6241EABFFFEB153FFFFB9FEFFFFFFFFAA9F,
+    ),
+    Fq2(p, 0x1, 0x0),
+)
+ynum = (
+    Fq2(
+        p,
+        0x1530477C7AB4113B59A4C18B076D11930F7DA5D4A07F649BF54439D87D27E500FC8C25EBF8C92F6812CFC71C71C6D706,
+        0x1530477C7AB4113B59A4C18B076D11930F7DA5D4A07F649BF54439D87D27E500FC8C25EBF8C92F6812CFC71C71C6D706,
+    ),
+    Fq2(
+        p,
+        0x0,
+        0x5C759507E8E333EBB5B7A9A47D7ED8532C52D39FD3A042A88B58423C50AE15D5C2638E343D9C71C6238AAAAAAAA97BE,
+    ),
+    Fq2(
+        p,
+        0x11560BF17BAA99BC32126FCED787C88F984F87ADF7AE0C7F9A208C6B4F20A4181472AAA9CB8D555526A9FFFFFFFFC71C,
+        0x8AB05F8BDD54CDE190937E76BC3E447CC27C3D6FBD7063FCD104635A790520C0A395554E5C6AAAA9354FFFFFFFFE38F,
+    ),
+    Fq2(
+        p,
+        0x124C9AD43B6CF79BFBF7043DE3811AD0761B0F37A1E26286B0E977C69AA274524E79097A56DC4BD9E1B371C71C718B10,
+        0x0,
+    ),
+)
+yden = (
+    Fq2(
+        p,
+        0x1A0111EA397FE69A4B1BA7B6434BACD764774B84F38512BF6730D2A0F6B0F6241EABFFFEB153FFFFB9FEFFFFFFFFA8FB,
+        0x1A0111EA397FE69A4B1BA7B6434BACD764774B84F38512BF6730D2A0F6B0F6241EABFFFEB153FFFFB9FEFFFFFFFFA8FB,
+    ),
+    Fq2(
+        p,
+        0x0,
+        0x1A0111EA397FE69A4B1BA7B6434BACD764774B84F38512BF6730D2A0F6B0F6241EABFFFEB153FFFFB9FEFFFFFFFFA9D3,
+    ),
+    Fq2(
+        p,
+        0x12,
+        0x1A0111EA397FE69A4B1BA7B6434BACD764774B84F38512BF6730D2A0F6B0F6241EABFFFEB153FFFFB9FEFFFFFFFFAA99,
+    ),
+    Fq2(p, 0x1, 0x0),
+)
+
+
 # compute 3-isogeny map from Ell2' to Ell2
 def iso3(P):
     return eval_iso(P, (xnum, xden, ynum, yden))
+
 
 ###
 ## map from Fq2 element(s) to point in G2 subgroup of Ell2
@@ -125,17 +175,20 @@ def opt_swu2_map(t, t2=None):
     P = iso3(Pp)
     return clear_h2(P)
 
+
 ###
 ## map from bytes() to point in G2 subgroup of Ell2
 ###
 def map2curve_osswu2(alpha, dst=None):
-    return opt_swu2_map( *( Fq2(p, *hh) for hh in Hp2(alpha, 2, dst) ) )
+    return opt_swu2_map(*(Fq2(p, *hh) for hh in Hp2(alpha, 2, dst)))
+
 
 if __name__ == "__main__":
     import sys
 
     def run_tests():
         import random
+
         for _ in range(0, 128):
             t1 = Fq2(p, random.getrandbits(380), random.getrandbits(380))
             t2 = Fq2(p, random.getrandbits(380), random.getrandbits(380))
@@ -154,7 +207,7 @@ if __name__ == "__main__":
             P = opt_swu2_map(t1, t2)
             Pp = from_jacobian(P)
             assert Pp[0] ** 3 + Fq2(p, 4, 4) == Pp[1] ** 2
-            sys.stdout.write('.')
+            sys.stdout.write(".")
             sys.stdout.flush()
         sys.stdout.write("\n")
 
@@ -164,6 +217,8 @@ if __name__ == "__main__":
             run_tests()
         else:
             for hash_in in opts.test_inputs:
-                print_tv_hash(hash_in, b'\x02', map2curve_osswu2, print_g2_hex, True, opts)
+                print_tv_hash(
+                    hash_in, b"\x02", map2curve_osswu2, print_g2_hex, True, opts
+                )
 
     main()

@@ -1,5 +1,5 @@
 import bech32m
-from ripemd.ripemd160 import ripemd160
+
 
 def decode_to_base256_with_type(text):
     (hrp, data, spec) = bech32m.bech32_decode(text)
@@ -7,6 +7,7 @@ def decode_to_base256_with_type(text):
 
     regrouped = bech32m.convertbits(data[1:], 5, 8, False)
     return (hrp, data[0], regrouped)
+
 
 def encode_from_base256_with_type(hrp, typ, data):
     converted = bech32m.convertbits(list(data), 8, 5, True)

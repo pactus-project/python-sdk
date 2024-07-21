@@ -1,4 +1,5 @@
 import sys
+
 sys.path.insert(0, "./bls")
 
 import hashlib
@@ -11,6 +12,7 @@ from signature import Signature, SIGNATURE_TYPE_BLS, DST
 
 PUBLIC_KEY_SIZE = 96
 PUBLIC_KEY_HRP = "public"
+
 
 class PublicKey:
     def __init__(self, point_g2):

@@ -1,4 +1,3 @@
-import io
 from enum import Enum
 import utils
 
@@ -50,7 +49,9 @@ class Address:
         if self.data == bytes([0]):
             return TreasuryAddressString
 
-        return utils.encode_from_base256_with_type(AddressHRP, self.data[0], self.data[1:])
+        return utils.encode_from_base256_with_type(
+            AddressHRP, self.data[0], self.data[1:]
+        )
 
     def address_type(self):
         return AddressType(self.data[0])

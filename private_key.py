@@ -1,13 +1,12 @@
 import sys
-sys.path.insert(0, './bls')
+
+sys.path.insert(0, "./bls")
 
 import utils
 from public_key import PublicKey
 from signature import DST, SIGNATURE_TYPE_BLS, Signature
-from bls.consts import g1suite
-from bls.curve_ops import g1gen, g2gen, point_mul
+from bls.curve_ops import g2gen, point_mul
 from bls.bls_sig_g1 import sign
-from bls.util import print_g1_hex, print_g2_hex, print_value
 
 PRIVATE_KEY_SIZE = 32
 PRIVATE_KEY_HRP = "secret"
@@ -37,7 +36,9 @@ class PrivateKey:
         return int.to_bytes(self.scalar)
 
     def string(self):
-        return utils.encode_from_base256_with_type(PRIVATE_KEY_HRP, SIGNATURE_TYPE_BLS, self.bytes())
+        return utils.encode_from_base256_with_type(
+            PRIVATE_KEY_HRP, SIGNATURE_TYPE_BLS, self.bytes()
+        )
 
     def public_key(self) -> PublicKey:
         pk_point = point_mul(self.scalar, g2gen)
@@ -59,4 +60,3 @@ class PrivateKey:
     def sign(self, msg) -> Signature:
         point_g1 = sign(self.scalar, msg, ciphersuite=DST)
         return Signature(point_g1)
-
