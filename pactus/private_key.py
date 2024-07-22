@@ -42,19 +42,6 @@ class PrivateKey:
 
     def public_key(self) -> PublicKey:
         pk_point = point_mul(self.scalar, g2gen)
-
-        # print("g2 generator:")
-        # print_g2_hex(g2gen)
-
-        # print("g1 generator:")
-        # print_g1_hex(g1gen)
-
-        # print("scalar:")
-        # print_value(self.scalar)
-
-        # print("point:")
-        # print_g2_hex(pk_point)
-
         return PublicKey(pk_point)
 
     def sign(self, msg) -> Signature:
