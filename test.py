@@ -7,7 +7,7 @@ from pactus.serializer import (
     append_fixed_bytes,
     append_var_int,
 )
-from pactus.signature import Signature  # Assuming Signature is defined in this module
+from pactus.signature import Signature
 
 
 class TestCrypto(unittest.TestCase):
