@@ -1,2 +1,1 @@
-bech32m
 ripemd
