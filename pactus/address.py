@@ -1,5 +1,5 @@
 from enum import Enum
-import utils
+from . import utils
 
 # Address format: hrp + `1` + type + data + checksum
 

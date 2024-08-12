@@ -4,11 +4,11 @@ sys.path.insert(0, "./bls")
 
 import hashlib
 from ripemd.ripemd160 import ripemd160
-import address
-from bls.serdesZ import deserialize, serialize
-from bls.bls_sig_g1 import verify
-import utils
-from signature import Signature, SIGNATURE_TYPE_BLS, DST
+from . import address
+from ..bls.serdesZ import deserialize, serialize
+from ..bls.bls_sig_g1 import verify
+from . import utils
+from .signature import Signature, SIGNATURE_TYPE_BLS, DST
 
 PUBLIC_KEY_SIZE = 96
 PUBLIC_KEY_HRP = "public"

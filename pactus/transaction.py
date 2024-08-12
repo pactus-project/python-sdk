@@ -28,9 +28,9 @@ class Transfer:
         self.lock_time = lock_time
         self.memo = memo
 
-    def get_unsigned_bytes(self):
+    def get_unsigned_bytes(self) -> bytes:
         """
-        Get bytes method returns unsigned buffer of the transaction.
+        Get bytes method returns unsigned bytes of the transaction.
         It can be passed to sign method using a private key for signing.
         """
         buf = []
@@ -43,7 +43,7 @@ class Transfer:
         sri.append_uint8(buf, version)
 
         sri.append_uint32(buf, self.lock_time)
-        sri.append_var_int(buf, 0) # TODO: add fee calculation logic
+        sri.append_var_int(buf, 0)  # TODO: add fee calculation logic
         sri.append_str(buf, self.memo)
         sri.append_uint8(buf, PayloadType.Transfer)  # Transfer payload
         sri.append_fixed_bytes(buf, self.sender.bytes())
@@ -51,6 +51,3 @@ class Transfer:
         sri.append_var_int(buf, self.amount.amount)
 
         return buf
-
-    def get_signed_bytes(prv):
-        return "TODO"

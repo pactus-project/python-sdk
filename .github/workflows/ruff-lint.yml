@@ -1,4 +1,4 @@
-name: Ruff
+name: Run Ruff Linter
 
 on: [ push, pull_request ]
 jobs:
