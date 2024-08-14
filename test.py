@@ -1,9 +1,13 @@
 import unittest
-import public_key
-import private_key
-import signature
-from address import Address
-from serializer import append_fixed_bytes, append_uint32, append_uint8, append_var_int
+from pactus.public_key import PublicKey
+from pactus.private_key import PrivateKey
+from pactus.transaction import Transfer
+from pactus.address import Address
+from pactus.serializer import (
+    append_fixed_bytes,
+    append_var_int,
+)
+from pactus.signature import Signature
 
 
 class TestCrypto(unittest.TestCase):
@@ -11,7 +15,7 @@ class TestCrypto(unittest.TestCase):
         prv_str = "SECRET1PDRWTLP5PX0FAHDX39GXZJP7FKZFALML0D5U9TT9KVQHDUC99CMGQQJVK67"
         expected_pub_str = "public1p4u8hfytl2pj6l9rj0t54gxcdmna4hq52ncqkkqjf3arha5mlk3x4mzpyjkhmdl20jae7f65aamjrvqcvf4sudcapz52ctcwc8r9wz3z2gwxs38880cgvfy49ta5ssyjut05myd4zgmjqstggmetyuyg7v5jhx47a"
 
-        prv = private_key.PrivateKey.from_string(prv_str)
+        prv = PrivateKey.from_string(prv_str)
         pub = prv.public_key()
         pub_str = pub.string()
 
@@ -22,7 +26,7 @@ class TestCrypto(unittest.TestCase):
         expected_acc_addr_str = "pc1z5x2a0lkt5nrrdqe0rkcv6r4pfkmdhrr3mawvua"
         expected_val_addr_str = "pc1p5x2a0lkt5nrrdqe0rkcv6r4pfkmdhrr3xk73tq"
 
-        pub = public_key.PublicKey.from_string(pub_str)
+        pub = PublicKey.from_string(pub_str)
         acc_add_str = pub.account_address().string()
         val_add_str = pub.validator_address().string()
 
@@ -31,11 +35,11 @@ class TestCrypto(unittest.TestCase):
 
     def test_sign(self):
         prv_str = "SECRET1PDRWTLP5PX0FAHDX39GXZJP7FKZFALML0D5U9TT9KVQHDUC99CMGQQJVK67"
-        prv = private_key.PrivateKey.from_string(prv_str)
+        prv = PrivateKey.from_string(prv_str)
         pub = prv.public_key()
         msg = b"zarb"
         sig = prv.sign(msg)
-        expected_sig = signature.Signature.from_string(
+        expected_sig = Signature.from_string(
             "ad0f88cec815e9b8af3f0136297cb242ed8b6369af723fbdac077fa927f5780db7df47c77fb53f3a22324673f000c792"
         )
 
@@ -75,31 +79,19 @@ class TestSerialization(unittest.TestCase):
 class TestTransferTx(unittest.TestCase):
     def test_sign_tx(self):
         prv_str = "SECRET1PDRWTLP5PX0FAHDX39GXZJP7FKZFALML0D5U9TT9KVQHDUC99CMGQQJVK67"
-        prv = private_key.PrivateKey.from_string(prv_str)
+        prv = PrivateKey.from_string(prv_str)
         pub = prv.public_key()
         sender = Address.from_string("pc1z5x2a0lkt5nrrdqe0rkcv6r4pfkmdhrr3mawvua")
         receiver = Address.from_string("pc1zt6qcdymkk48c5ds0fzfsaf6puwu8w8djn3ffpn")
-        flags = 0
-        version = 1
-        amount = 1_000_000_000  # 1 PAC
-        fee = 100_000
+        amount = 1_000_000_000.0  # 1 PAC
         lock_time = 0x123456
 
-        buf = []
-        append_uint8(buf, flags)
-        append_uint8(buf, version)
-        append_uint32(buf, lock_time)
-        append_var_int(buf, fee)
-        append_uint8(buf, 0)  # TODO: append_string()
-        append_uint8(buf, 1)  # Transfer payload
-        append_fixed_bytes(buf, sender.bytes())
-        append_fixed_bytes(buf, receiver.bytes())
-        append_var_int(buf, amount)
+        tx = Transfer(sender, receiver, amount, "", lock_time)
 
-        sig = prv.sign(bytes(buf[1:]))  # ignore flags
+        sig = prv.sign(tx.get_unsigned_bytes())
 
-        append_fixed_bytes(buf, sig.bytes())
-        append_fixed_bytes(buf, pub.bytes())
+        append_fixed_bytes(tx.get_unsigned_bytes(), sig.bytes())
+        append_fixed_bytes(tx.get_unsigned_bytes(), pub.bytes())
 
         expected_data = (
             "00"  # Flags
@@ -117,7 +109,7 @@ class TestTransferTx(unittest.TestCase):
         )  # Public Key
 
         self.maxDiff = None
-        self.assertEqual(expected_data, bytes(buf).hex())
+        self.assertEqual(expected_data, tx.get_unsigned_bytes().hex())
 
 
 if __name__ == "__main__":

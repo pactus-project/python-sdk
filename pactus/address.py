@@ -1,18 +1,17 @@
 from enum import Enum
-import utils
+from . import utils
 
 # Address format: hrp + `1` + type + data + checksum
+
+AddressSize = 21
+TreasuryAddressString = "000000000000000000000000000000000000000000"
+AddressHRP = "pc"
 
 
 class AddressType(Enum):
     Treasury = 0
     Validator = 1
     BLSAccount = 2
-
-
-AddressSize = 21
-TreasuryAddressString = "000000000000000000000000000000000000000000"
-AddressHRP = "pc"
 
 
 class Address:

@@ -1,4 +1,4 @@
-import bech32m
+from . import bech32m
 
 
 def decode_to_base256_with_type(text):

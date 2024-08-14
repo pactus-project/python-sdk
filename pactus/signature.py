@@ -3,8 +3,8 @@ import sys
 sys.path.insert(0, "./bls")
 
 
-from bls.serdesZ import serialize
-from bls.serdesZ import deserialize
+from ..bls.serdesZ import serialize
+from ..bls.serdesZ import deserialize
 
 SIGNATURE_SIZE = 48
 SIGNATURE_TYPE_BLS = 1

@@ -3,10 +3,10 @@ import sys
 sys.path.insert(0, "./bls")
 
 import utils
-from public_key import PublicKey
-from signature import DST, SIGNATURE_TYPE_BLS, Signature
-from bls.curve_ops import g2gen, point_mul
-from bls.bls_sig_g1 import sign
+from .public_key import PublicKey
+from .signature import DST, SIGNATURE_TYPE_BLS, Signature
+from .bls.curve_ops import g2gen, point_mul
+from .bls.bls_sig_g1 import sign
 
 PRIVATE_KEY_SIZE = 32
 PRIVATE_KEY_HRP = "secret"
@@ -42,19 +42,6 @@ class PrivateKey:
 
     def public_key(self) -> PublicKey:
         pk_point = point_mul(self.scalar, g2gen)
-
-        # print("g2 generator:")
-        # print_g2_hex(g2gen)
-
-        # print("g1 generator:")
-        # print_g1_hex(g1gen)
-
-        # print("scalar:")
-        # print_value(self.scalar)
-
-        # print("point:")
-        # print_g2_hex(pk_point)
-
         return PublicKey(pk_point)
 
     def sign(self, msg) -> Signature:
