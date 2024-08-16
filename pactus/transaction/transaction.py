@@ -89,7 +89,7 @@ class Transaction:
         buf = bytearray()
 
         sign_bytes = self._get_unsigned_bytes(buf)
-        sig = private_key.sign(bytes(sign_bytes))
+        sig = private_key.sign(bytes(sign_bytes[1:])) # flags is not part of the sign bytes.
         pub = private_key.public_key()
 
         encoding.append_fixed_bytes(buf, sig.bytes())
