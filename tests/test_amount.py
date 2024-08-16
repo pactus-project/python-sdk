@@ -4,7 +4,7 @@ from pactus.types.amount import NANO_PAC_PER_PAC, Amount
 
 
 class TestAmount(unittest.TestCase):
-    def test_from_NanoPAC(self):
+    def test_from_nano_pac(self):
         test_cases = [
             # Valid cases
             {
@@ -27,12 +27,12 @@ class TestAmount(unittest.TestCase):
         for case in test_cases:
             if case["raises"]:
                 with self.assertRaises(case["raises"]):
-                    Amount.from_NanoPAC(case["input"])
+                    Amount.from_nano_pac(case["input"])
             else:
-                amt = Amount.from_NanoPAC(case["input"])
+                amt = Amount.from_nano_pac(case["input"])
                 self.assertEqual(amt, case["expected"])
 
-    def test_FromString(self):
+    def test_from_string(self):
         test_cases = [
             # Valid cases
             {
@@ -56,9 +56,9 @@ class TestAmount(unittest.TestCase):
         for case in test_cases:
             if case["raises"]:
                 with self.assertRaises(case["raises"]):
-                    Amount.FromString(case["input"])
+                    Amount.from_string(case["input"])
             else:
-                amt = Amount.FromString(case["input"])
+                amt = Amount.from_string(case["input"])
                 self.assertEqual(amt, case["expected"])
 
 

@@ -1,7 +1,8 @@
+from pactus.crypto.address import Address
 from pactus.crypto.private_key import PrivateKey
 from pactus.encoding import encoding
-from pactus.crypto.address import Address
 from pactus.types.amount import Amount
+
 from ._payload import (
     BondPayload,
     Payload,
@@ -13,8 +14,12 @@ from ._payload import (
 
 class Transaction:
     def __init__(
-        self, lock_time: int, fee: Amount, memo: str = "", payload: Payload = None
-    ):
+        self,
+        lock_time: int,
+        fee: Amount,
+        memo: str = "",
+        payload: Payload = None,
+    ) -> None:
         self.lock_time = lock_time
         self.memo = memo
         self.flags = 0
@@ -31,7 +36,7 @@ class Transaction:
         amount: Amount,
         fee: Amount,
         memo: str = "",
-    ):
+    ) -> "Transaction":
         tx = cls(lock_time, fee, memo)
         tx.payload = TransferPayload(sender, receiver, amount)
         return tx
@@ -46,12 +51,17 @@ class Transaction:
         fee: Amount,
         stake: Amount,
         memo: str = "",
-    ):
+    ) -> "Transaction":
         payload = BondPayload(sender, receiver, public_key, stake)
         return cls(lock_time, fee, memo, payload)
 
     @classmethod
-    def create_unbond_tx(cls, lock_time: int, validator: Address, memo: str = ""):
+    def create_unbond_tx(
+        cls,
+        lock_time: int,
+        validator: Address,
+        memo: str = "",
+    ) -> "Transaction":
         payload = UnbondPayload(validator)
         return cls(lock_time, 0, memo, payload)
 
@@ -64,14 +74,12 @@ class Transaction:
         amount: Amount,
         fee: Amount,
         memo: str = "",
-    ):
+    ) -> "Transaction":
         payload = WithdrawPayload(from_addr, to_addr, amount)
         return cls(lock_time, fee, memo, payload)
 
     def _get_unsigned_bytes(self, buf: bytes) -> bytes:
-        """
-        Get unsigned bytes of the transaction, including the payload.
-        """
+        """Get unsigned bytes of the transaction, including the payload."""
         encoding.append_uint8(buf, self.flags)
         encoding.append_uint8(buf, self.version)
         encoding.append_uint32(buf, self.lock_time)
@@ -83,16 +91,16 @@ class Transaction:
         return buf
 
     def sign(self, private_key: PrivateKey) -> str:
-        """
-        Make a raw transaction, sign it and return the signed bytes.
-        """
+        """Make a raw transaction, sign it and return the signed bytes."""
         buf = bytearray()
 
         sign_bytes = self._get_unsigned_bytes(buf)
-        sig = private_key.sign(bytes(sign_bytes[1:])) # flags is not part of the sign bytes.
+        sig = private_key.sign(
+            bytes(sign_bytes[1:]),
+        )  # flags is not part of the sign bytes.
         pub = private_key.public_key()
 
-        encoding.append_fixed_bytes(buf, sig.bytes())
-        encoding.append_fixed_bytes(buf, pub.bytes())
+        encoding.append_fixed_bytes(buf, sig.raw_bytes())
+        encoding.append_fixed_bytes(buf, pub.raw_bytes())
 
         return buf.hex()

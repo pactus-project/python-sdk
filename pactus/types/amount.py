@@ -16,29 +16,33 @@ class Amount:
     NanoPAC, you can initialize the Amount directly with an integer.
     """
 
-    def __init__(self, amt: int = 0):
+    def __init__(self, amt: int = 0) -> None:
         self.value = amt
 
-    def __eq__(self, other):
+    def __eq__(self, other: "Amount") -> bool:
         if isinstance(other, Amount):
             return self.value == other.value
+
         return False
 
-    def from_NanoPAC(f: float):
+    @classmethod
+    def from_nano_pac(cls, f: float) -> "Amount":
         """
-        Converts a floating-point value in PAC to NanoPAC and stores it in the Amount instance.
+        Convert a floating-point value in PAC to NanoPAC and stores it in the Amount instance.
 
         The conversion is invalid if the floating-point value is NaN or +-Infinity,
         in which case a ValueError is raised.
         """
         if math.isinf(f) or math.isnan(f):
-            raise ValueError(f"invalid PAC amount: {f}")
+            msg = f"invalid PAC amount: {f}"
+            raise ValueError(msg)
 
-        return Amount(int(round(f * NANO_PAC_PER_PAC)))
+        return cls(int(cls.round(f * NANO_PAC_PER_PAC)))
 
-    def FromString(s: str):
+    @classmethod
+    def from_string(cls, s: str) -> "Amount":
         """
-        Parses a string representing a value in PAC, converts it to NanoPAC,
+        Pars a string representing a value in PAC, converts it to NanoPAC,
         and updates the Amount object.
 
         If the string cannot be parsed as a float, a ValueError is raised.
@@ -46,19 +50,20 @@ class Amount:
         try:
             f = float(s)
         except ValueError as e:
-            raise ValueError("invalid PAC amount") from e
+            msg = "invalid PAC amount"
+            raise ValueError(msg) from e
 
-        return Amount.from_NanoPAC(f)
+        return cls.from_nano_pac(f)
 
+    def round(self: float) -> float:
+        """
+        Round converts a floating point number, which may or may not be representable
+        as an integer, to the Amount integer type by rounding to the nearest integer.
 
-def round(f: float) -> float:
-    """
-    round converts a floating point number, which may or may not be representable
-    as an integer, to the Amount integer type by rounding to the nearest integer.
-    This is performed by adding or subtracting 0.5 depending on the sign, and
-    relying on integer truncation to round the value to the nearest Amount.
-    """
-    if f < 0:
-        return f - 0.5
+        This is performed by adding or subtracting 0.5 depending on the sign, and
+        relying on integer truncation to round the value to the nearest Amount.
+        """
+        if self < 0:
+            return self - 0.5
 
-    return f + 0.5
+        return self + 0.5

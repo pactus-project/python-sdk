@@ -16,52 +16,58 @@ class AddressType(Enum):
 
 
 class Address:
-    def __init__(self, address_type, data):
+    def __init__(self, address_type: AddressType, data: bytes) -> None:
         if len(data) != AddressSize - 1:
-            raise ValueError("Data must be 21 bytes long")
+            msg = "Data must be 21 bytes long"
+            raise ValueError(msg)
 
         self.data = bytearray()
         self.data.append(address_type.value)
         self.data.extend(data)
 
     @classmethod
-    def from_string(cls, text):
+    def from_string(cls, text: str) -> "Address":
         if text == TreasuryAddressString:
             return bytes([0])
 
         hrp, typ, data = utils.decode_to_base256_with_type(text)
         if hrp != AddressHRP:
-            raise ValueError(f"Invalid HRP: {hrp}")
+            msg = f"Invalid HRP: {hrp}"
+            raise ValueError(msg)
 
         typ = AddressType(typ)
         if typ in (AddressType.Validator, AddressType.BLSAccount):
             if len(data) != 20:
-                raise ValueError(f"Invalid length: {len(data) + 1}")
+                msg = f"Invalid length: {len(data) + 1}"
+                raise ValueError(msg)
         else:
-            raise ValueError(f"Invalid address type: {typ}")
+            msg = f"Invalid address type: {typ}"
+            raise ValueError(msg)
 
         return cls(typ, data)
 
-    def bytes(self):
+    def raw_bytes(self) -> bytes:
         return bytes(self.data)
 
-    def string(self):
+    def string(self) -> str:
         if self.data == bytes([0]):
             return TreasuryAddressString
 
         return utils.encode_from_base256_with_type(
-            AddressHRP, self.data[0], self.data[1:]
+            AddressHRP,
+            self.data[0],
+            self.data[1:],
         )
 
-    def address_type(self):
+    def address_type(self) -> AddressType:
         return AddressType(self.data[0])
 
-    def is_treasury_address(self):
+    def is_treasury_address(self) -> bool:
         return self.address_type() == AddressType.Treasury
 
-    def is_account_address(self):
+    def is_account_address(self) -> bool:
         t = self.address_type()
         return t in (AddressType.Treasury, AddressType.BLSAccount)
 
-    def is_validator_address(self):
+    def is_validator_address(self) -> bool:
         return self.address_type() == AddressType.Validator

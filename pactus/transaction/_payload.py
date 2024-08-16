@@ -1,10 +1,9 @@
+from abc import ABC, abstractmethod
 from enum import Enum
 
-from pactus.encoding import encoding
 from pactus.crypto.address import Address
+from pactus.encoding import encoding
 from pactus.types.amount import Amount
-
-from abc import ABC, abstractmethod
 
 
 class PayloadType(Enum):
@@ -17,31 +16,29 @@ class PayloadType(Enum):
 
 class Payload(ABC):
     @abstractmethod
-    def encode(self, buf: list):
+    def encode(self, buf: list) -> None:
         """
-        This method should append the payload data to the buffer.
+        Append the payload data to the buffer.
         Must be implemented by subclasses.
         """
-        pass
 
     @abstractmethod
     def get_type(self) -> PayloadType:
         """
-        This method should return the type of the payload.
+        Return the type of the payload.
         Must be implemented by subclasses.
         """
-        pass
 
 
 class TransferPayload:
-    def __init__(self, sender: Address, receiver: Address, amount: Amount):
+    def __init__(self, sender: Address, receiver: Address, amount: Amount) -> None:
         self.sender = sender
         self.receiver = receiver
         self.amount = amount
 
-    def encode(self, buf: list):
-        encoding.append_fixed_bytes(buf, self.sender.bytes())
-        encoding.append_fixed_bytes(buf, self.receiver.bytes())
+    def encode(self, buf: list) -> None:
+        encoding.append_fixed_bytes(buf, self.sender.raw_bytes())
+        encoding.append_fixed_bytes(buf, self.receiver.raw_bytes())
         encoding.append_var_int(buf, self.amount.value)
 
     def get_type(self) -> PayloadType:
@@ -50,16 +47,20 @@ class TransferPayload:
 
 class BondPayload:
     def __init__(
-        self, sender: Address, receiver: Address, public_key: bytes, stake: Amount
-    ):
+        self,
+        sender: Address,
+        receiver: Address,
+        public_key: bytes,
+        stake: Amount,
+    ) -> None:
         self.sender = sender
         self.receiver = receiver
         self.public_key = public_key
         self.stake = stake
 
-    def encode(self, buf: list):
-        encoding.append_fixed_bytes(buf, self.sender.bytes())
-        encoding.append_fixed_bytes(buf, self.receiver.bytes())
+    def encode(self, buf: list) -> None:
+        encoding.append_fixed_bytes(buf, self.sender.raw_bytes())
+        encoding.append_fixed_bytes(buf, self.receiver.raw_bytes())
         encoding.append_fixed_bytes(buf, self.public_key)
         encoding.append_var_int(buf, self.stake.value)
 
@@ -68,25 +69,25 @@ class BondPayload:
 
 
 class UnbondPayload:
-    def __init__(self, validator: Address):
+    def __init__(self, validator: Address) -> None:
         self.validator = validator
 
-    def encode(self, buf: list):
-        encoding.append_fixed_bytes(buf, self.validator.bytes())
+    def encode(self, buf: list) -> None:
+        encoding.append_fixed_bytes(buf, self.validator.raw_bytes())
 
     def get_type(self) -> PayloadType:
         return PayloadType.Unbond
 
 
 class WithdrawPayload:
-    def __init__(self, from_addr: Address, to_addr: Address, amount: Amount):
+    def __init__(self, from_addr: Address, to_addr: Address, amount: Amount) -> None:
         self.from_addr = from_addr
         self.to_addr = to_addr
         self.amount = amount
 
-    def encode(self, buf: list):
-        encoding.append_fixed_bytes(buf, self.from_addr.bytes())
-        encoding.append_fixed_bytes(buf, self.to_addr.bytes())
+    def encode(self, buf: list) -> None:
+        encoding.append_fixed_bytes(buf, self.from_addr.raw_bytes())
+        encoding.append_fixed_bytes(buf, self.to_addr.raw_bytes())
         encoding.append_var_int(buf, self.amount)
 
     def get_type(self) -> PayloadType:

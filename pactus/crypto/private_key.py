@@ -1,16 +1,17 @@
+from abc import ABC, abstractmethod
+
 from .public_key import PublicKey
 from .signature import Signature
-from abc import ABC, abstractmethod
 
 
 class PrivateKey(ABC):
     @classmethod
     @abstractmethod
-    def from_string(text: str):
+    def from_string(cls, text: str) -> "PrivateKey":
         pass
 
     @abstractmethod
-    def bytes(self) -> bytes:
+    def raw_bytes(self) -> bytes:
         pass
 
     @abstractmethod

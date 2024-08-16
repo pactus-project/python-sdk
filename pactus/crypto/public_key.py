@@ -1,21 +1,22 @@
-from .address import Address
-from .signature import Signature
 from abc import ABC, abstractmethod
+
+from .signature import Signature
 
 
 class PublicKey(ABC):
     @classmethod
     @abstractmethod
-    def from_string(cls, text: str):
+    def from_string(cls, text: str) -> "PublicKey":
         pass
 
     @abstractmethod
-    def bytes(self) -> bytes:
+    def raw_bytes(self) -> bytes:
         pass
 
     @abstractmethod
     def string(self) -> str:
         pass
 
-    def verify(self, msg, sig: Signature) -> bool:
+    @abstractmethod
+    def verify(self, msg: str, sig: Signature) -> bool:
         pass

@@ -1,9 +1,9 @@
 import unittest
 
 from pactus.crypto.address import Address
-from pactus.types.amount import Amount
 from pactus.crypto.bls.private_key import PrivateKey
-from pactus.transaction import Transaction
+from pactus.transaction.transaction import Transaction
+from pactus.types.amount import Amount
 
 
 class TestTransaction(unittest.TestCase):
@@ -12,8 +12,8 @@ class TestTransaction(unittest.TestCase):
         prv = PrivateKey.from_string(prv_str)
         sender = Address.from_string("pc1z5x2a0lkt5nrrdqe0rkcv6r4pfkmdhrr3mawvua")
         receiver = Address.from_string("pc1zt6qcdymkk48c5ds0fzfsaf6puwu8w8djn3ffpn")
-        amount = Amount.from_NanoPAC(1.0)  # 1 PAC
-        fee = Amount.from_NanoPAC(0.001)  # 0.001 PAC
+        amount = Amount.from_nano_pac(1.0)  # 1 PAC
+        fee = Amount.from_nano_pac(0.001)  # 0.001 PAC
         lock_time = 0x123456
         memo = "test"
 

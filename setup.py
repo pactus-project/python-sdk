@@ -1,35 +1,51 @@
 import codecs
-import os
+from pathlib import Path
 
 from setuptools import find_packages, setup
 
-here = os.path.abspath(os.path.dirname(__file__))
+here = Path.abspath(Path.dirname(__file__))
 
-with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
-    long_description = "\n" + fh.read()
+with codecs.open(here / "README.md", encoding="utf-8") as fh:
+    long_description = fh.read()
 
-VERSION = "0.0.1"
+NAME = "pactus-sdk"
+VERSION = "1.0.0"
+AUTHOR = "Pactus Foundation"
+AUTHOR_EMAIL = "info@pactus.org"
 DESCRIPTION = "Pactus development kit"
-LONG_DESCRIPTION = "This SDK is used to provide python utilities to interact with the Pactus blockchain, create transactions, sign messages or generate keys."
+LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
+URL = "https://github.com/pactus-project/python-sdk"
 
-# Setting up
+# Package dependencies
+REQUIRED = [
+    "ripemd",
+    "bech32m",
+]
+
+CLASSIFIERS = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Operating System :: OS Independent",
+]
+
 setup(
-    name="pactus-sdk",
+    name=NAME,
     version=VERSION,
-    author="Pactus foundation",
-    author_email="<info@pactus.org>",
+    author=AUTHOR,
+    author_email=AUTHOR_EMAIL,
     description=DESCRIPTION,
-    long_description_content_type="text/markdown",
     long_description=long_description,
+    long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,
+    url=URL,
     packages=find_packages(),
-    install_requires=["ripemd", "bech32m"],
+    install_requires=REQUIRED,
     keywords=["pactus", "blockchain", "web3", "dapp", "bls", "bech32"],
-    classifiers=[
-        "Development Status :: 1 - Planning",
-        "Intended Audience :: Developers",
-        "Programming Language :: Python :: 3",
-        "Operating System :: Unix",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
-    ],
+    classifiers=CLASSIFIERS,
+    python_requires=">=3.6",
 )
