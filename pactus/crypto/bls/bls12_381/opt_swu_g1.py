@@ -2,11 +2,11 @@
 #
 # pure Python implementation of optimized simplified SWU map to BLS12-381 G1
 
-from consts import p
-from curve_ops import clear_h, eval_iso, from_jacobian, point_add
-from fields import Fq, sgn0
-from hash_to_field import Hp
-from util import get_cmdline_options, print_g1_hex, print_tv_hash
+from .consts import p
+from .curve_ops import clear_h, eval_iso, from_jacobian, point_add
+from .fields import Fq, sgn0
+from .hash_to_field import Hp
+from .util import get_cmdline_options, print_g1_hex, print_tv_hash
 
 # distinguished non-square in Fp for SWU map
 xi_1 = Fq(p, 11)

@@ -7,7 +7,7 @@ import hashlib
 import hmac
 from random import randint
 
-from consts import p, q
+from .consts import p, q
 
 
 # defined in RFC 3447, section 4.1

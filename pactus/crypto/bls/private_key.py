@@ -1,12 +1,9 @@
-import sys
-
-sys.path.insert(0, "./bls")
-
-import utils
+from .bls12_381.bls_sig_g1 import sign
+from .bls12_381.curve_ops import g2gen, point_mul
 from .public_key import PublicKey
 from .signature import DST, SIGNATURE_TYPE_BLS, Signature
-from .bls.curve_ops import g2gen, point_mul
-from .bls.bls_sig_g1 import sign
+
+from pactus.utils import utils
 
 PRIVATE_KEY_SIZE = 32
 PRIVATE_KEY_HRP = "secret"

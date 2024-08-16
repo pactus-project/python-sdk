@@ -10,9 +10,9 @@
 
 import struct
 
-from consts import p
-from curve_ops import from_jacobian, point_eq
-from fields import Fq, Fq2, sgn0_be, sqrt_F2
+from .consts import p
+from .curve_ops import from_jacobian, point_eq
+from .fields import Fq, Fq2, sgn0_be, sqrt_F2
 
 F1_one = Fq.one(p)
 F1_zero = Fq.zero(p)

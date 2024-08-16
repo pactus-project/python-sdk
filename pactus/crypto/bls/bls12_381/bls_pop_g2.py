@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
-from bls_sig_g2 import keygen
-from consts import g2pop
-from curve_ops import g1gen, point_mul, point_neg, subgroup_check_g1, subgroup_check_g2
-from opt_swu_g2 import map2curve_osswu2
-from pairing import multi_pairing
-from serdesZ import serialize
-from util import get_cmdline_options, print_g1_hex, print_g2_hex, print_tv_pop
+from .bls_sig_g2 import keygen
+from .consts import g2pop
+from .curve_ops import g1gen, point_mul, point_neg, subgroup_check_g1, subgroup_check_g2
+from .opt_swu_g2 import map2curve_osswu2
+from .pairing import multi_pairing
+from .serdesZ import serialize
+from .util import get_cmdline_options, print_g1_hex, print_g2_hex, print_tv_pop
 
 
 # pop_prove takes in x_prime (the output of keygen), the pubkey, and a ciphersuite id

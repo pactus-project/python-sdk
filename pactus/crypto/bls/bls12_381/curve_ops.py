@@ -4,8 +4,8 @@
 
 import sys
 
-from consts import p, q
-from fields import Fq, Fq2
+from .consts import p, q
+from .fields import Fq, Fq2
 
 if sys.version_info[0] < 3:
     sys.exit("This script requires Python3 or PyPy3")
@@ -25,7 +25,7 @@ g1gen = (
     ),
     Fq.one(p),
 )
-gen = g2gen = (
+g2gen = (
     Fq2(
         p,
         0x024AA2B2F08F0A91260805272DC51051C6E47AD4FA403B02B4510B647AE3D1770BAC0326A805BBEFD48056C8C121BDB8,

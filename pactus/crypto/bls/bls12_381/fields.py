@@ -14,7 +14,8 @@
 # * moved sgn0 and sqrt_F2 into this file
 
 from copy import deepcopy
-from consts import p
+
+from .consts import p
 
 
 # "sign" of x: returns -1 if x is the lexically larger of x and -1 * x, else returns 1

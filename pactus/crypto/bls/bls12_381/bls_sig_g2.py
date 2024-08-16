@@ -3,7 +3,7 @@
 from functools import partial
 from itertools import chain
 
-from bls_sig_g1 import (
+from .bls_sig_g1 import (
     _agg_ver_nul,
     _agg_ver_aug,
     _keygen,
@@ -11,11 +11,11 @@ from bls_sig_g1 import (
     _sign_aug,
     _verify_aug,
 )
-from consts import g2suite
-from curve_ops import g1gen, point_neg, subgroup_check_g1, subgroup_check_g2
-from opt_swu_g2 import map2curve_osswu2
-from pairing import multi_pairing
-from util import get_cmdline_options, print_g1_hex, print_g2_hex, print_tv_sig, SigType
+from .consts import g2suite
+from .curve_ops import g1gen, point_neg, subgroup_check_g1, subgroup_check_g2
+from .opt_swu_g2 import map2curve_osswu2
+from .pairing import multi_pairing
+from .util import get_cmdline_options, print_g1_hex, print_g2_hex, print_tv_sig, SigType
 
 # sk must be bytes()
 keygen = partial(_keygen, gen=g1gen)

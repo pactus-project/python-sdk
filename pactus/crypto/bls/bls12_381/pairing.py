@@ -14,9 +14,9 @@
 from functools import reduce
 from operator import mul
 
-from consts import p, ell_u, k_final
-from curve_ops import from_jacobian, point_double, point_add, to_coZ
-from fields import Fq, Fq2, Fq6, Fq12
+from .consts import p, ell_u, k_final
+from .curve_ops import from_jacobian, point_double, point_add, to_coZ
+from .fields import Fq, Fq2, Fq6, Fq12
 
 # constants for untwisting
 ut_root = Fq12.one(p).root

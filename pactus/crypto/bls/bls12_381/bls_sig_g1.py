@@ -3,8 +3,8 @@
 from functools import partial, reduce
 from itertools import chain
 
-from consts import g1suite
-from curve_ops import (
+from .consts import g1suite
+from .curve_ops import (
     g2gen,
     point_add,
     point_mul,
@@ -12,11 +12,11 @@ from curve_ops import (
     subgroup_check_g1,
     subgroup_check_g2,
 )
-from hash_to_field import xprime_from_sk
-from opt_swu_g1 import map2curve_osswu
-from pairing import multi_pairing
-from serdesZ import serialize
-from util import get_cmdline_options, print_g1_hex, print_g2_hex, print_tv_sig, SigType
+from .hash_to_field import xprime_from_sk
+from .opt_swu_g1 import map2curve_osswu
+from .pairing import multi_pairing
+from .serdesZ import serialize
+from .util import get_cmdline_options, print_g1_hex, print_g2_hex, print_tv_sig, SigType
 
 
 # sk must be bytes()

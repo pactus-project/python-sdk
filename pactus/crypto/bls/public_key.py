@@ -1,14 +1,13 @@
-import sys
-
-sys.path.insert(0, "./bls")
-
 import hashlib
+
 from ripemd.ripemd160 import ripemd160
-from . import address
-from ..bls.serdesZ import deserialize, serialize
-from ..bls.bls_sig_g1 import verify
-from . import utils
-from .signature import Signature, SIGNATURE_TYPE_BLS, DST
+
+from pactus.crypto.address import Address, AddressType
+from .bls12_381.bls_sig_g1 import verify
+from .bls12_381.serdesZ import deserialize, serialize
+from .signature import DST, SIGNATURE_TYPE_BLS, Signature
+
+from pactus.utils import utils
 
 PUBLIC_KEY_SIZE = 96
 PUBLIC_KEY_HRP = "public"
@@ -35,26 +34,26 @@ class PublicKey:
 
         return cls(point_g2)
 
-    def bytes(self):
+    def bytes(self) -> bytes:
         return serialize(self.point_g2)
 
-    def string(self):
+    def string(self) -> str:
         return utils.encode_from_base256_with_type(
             PUBLIC_KEY_HRP, SIGNATURE_TYPE_BLS, self.bytes()
         )
 
-    def account_address(self):
-        return self._make_address(address.AddressType.BLSAccount)
+    def account_address(self) -> Address:
+        return self._make_address(AddressType.BLSAccount)
 
-    def validator_address(self):
-        return self._make_address(address.AddressType.Validator)
+    def validator_address(self) -> Address:
+        return self._make_address(AddressType.Validator)
 
     def _make_address(self, address_type):
         blake2b = hashlib.blake2b(digest_size=32)
         blake2b.update(self.bytes())
         hash_256 = blake2b.digest()
         hash_160 = ripemd160(hash_256)
-        addr = address.Address(address_type, hash_160)
+        addr = Address(address_type, hash_160)
         return addr
 
     def verify(self, msg, sig: Signature) -> bool:

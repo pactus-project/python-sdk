@@ -1,5 +1,6 @@
 from enum import Enum
-from . import utils
+
+from pactus.utils import utils
 
 # Address format: hrp + `1` + type + data + checksum
 

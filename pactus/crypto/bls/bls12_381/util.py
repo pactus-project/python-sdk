@@ -9,9 +9,9 @@ import os
 import struct
 import sys
 
-from consts import q
-from curve_ops import g1gen, g2gen, from_jacobian
-from serdesZ import serialize, deserialize, SerError, DeserError
+from .consts import q
+from .curve_ops import g1gen, g2gen, from_jacobian
+from .serdesZ import serialize, deserialize, SerError, DeserError
 
 
 @unique
