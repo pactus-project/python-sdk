@@ -79,7 +79,9 @@ def bech32_encode(hrp, data, spec):
 
 def bech32_decode(bech):
     """Validate a Bech32/Bech32m string, and determine HRP and data."""
-    if (any(ord(x) < 33 or ord(x) > 126 for x in bech)) or (bech.lower() != bech and bech.upper() != bech):
+    if (any(ord(x) < 33 or ord(x) > 126 for x in bech)) or (
+        bech.lower() != bech and bech.upper() != bech
+    ):
         return (None, None, None)
     bech = bech.lower()
     pos = bech.rfind("1")

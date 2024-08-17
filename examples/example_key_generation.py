@@ -17,7 +17,11 @@ def main() -> None:
         help="Type of address to generate: 1 for Validator, 2 for BLSAccount (default: 2)",
     )
 
-    parser.add_argument("--testnet", action="store_true", help="Specify if the key should be created for the testnet")
+    parser.add_argument(
+        "--testnet",
+        action="store_true",
+        help="Specify if the key should be created for the testnet",
+    )
     args = parser.parse_args()
 
     if args.testnet:
