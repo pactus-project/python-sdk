@@ -1,36 +1,56 @@
 # Pactus Python SDK
 
-This SDK is used to provide python utilities to interact with the [Pactus](https://pactus.org) blockchain, create transactions, sign messages or generate keys.
+The Pactus Python SDK provides a set of utilities to seamlessly interact with the [Pactus](https://pactus.org) blockchain.
+With this SDK, you can easily create transactions, sign messages, generate cryptographic keys, and more.
 
-You can build apps on the top of Pactus using this SDK with ease in python.
+## Installation
 
-## Install
-
-You can install this packages using `pip`:
+You can install the SDK using `pip`:
 
 ```bash
 pip install pactus-sdk
 ```
 
-## Development
+## Examples
 
-After making any changes, make sure all tests are passing by running:
+To help you get started, we've included an `examples` folder that contains various scripts demonstrating how to
+use the SDK for different tasks. These examples cover key generation, transaction creation, message signing, and more.
+
+To run an example, navigate to the `examples` directory and execute the script using Python:
 
 ```bash
-python3 -m unittest discover tests/
+cd examples
+python  example_key_generation.py
 ```
 
-Also, make sure you run [linter](https://docs.astral.sh/ruff/) after your change and formatter by running:
+Explore the `examples` folder for more detailed usage scenarios.
+
+## Development Setup
+
+For local development, you can install the package in editable mode, which allows you to make changes and test them immediately:
+
+```bash
+pip install -e .
+```
+
+After making changes, it's important to ensure all tests pass by running:
+
+```bash
+python3 -m unittest discover tests
+```
+
+Maintaining code quality is crucial. Use [Ruff](https://docs.astral.sh/ruff/) to format and lint your code:
 
 ```bash
 ruff format # formatting code style
 ruff check # running linter
 ```
 
-## Contribution
+## Contributing
 
 Contributions are welcome! Feel free to add features, fix bugs, or improve documentation via pull requests.
 
 ## License
 
-This packages is published under [MIT License](./LICENSE).
+This project is licensed under the [MIT License](./LICENSE).
+By contributing, you agree to license your contributions under the same terms.
