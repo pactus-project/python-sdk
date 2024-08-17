@@ -8,10 +8,12 @@ from pactus.utils import utils
 ADDRESS_SIZE = 21
 TREASURY_ADDRESS_STRING = "000000000000000000000000000000000000000000"
 
+
 class AddressType(Enum):
     TREASURY = 0
     VALIDATOR = 1
     BLS_ACCOUNT = 2
+
 
 class Address:
     def __init__(self, address_type: AddressType, data: bytes) -> None:
@@ -29,7 +31,7 @@ class Address:
             return bytes([0])
 
         hrp, typ, data = utils.decode_to_base256_with_type(text)
-        if hrp !=CryptoConfig. ADDRESS_HRP:
+        if hrp != CryptoConfig.ADDRESS_HRP:
             msg = f"Invalid HRP: {hrp}"
             raise ValueError(msg)
 

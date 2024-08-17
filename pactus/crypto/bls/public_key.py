@@ -2,8 +2,8 @@ import hashlib
 
 from ripemd.ripemd160 import ripemd160
 
-from pactus.crypto.address import Address, AddressType
 from pactus.crypto import CryptoConfig
+from pactus.crypto.address import Address, AddressType
 from pactus.utils import utils
 
 from .bls12_381.bls_sig_g1 import verify

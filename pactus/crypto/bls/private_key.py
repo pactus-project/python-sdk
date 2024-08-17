@@ -18,11 +18,11 @@ class PrivateKey:
         self.scalar = scalar
 
     @classmethod
-    def from_bytes(cls, buffer: bytes)-> "PrivateKey":
+    def from_bytes(cls, buffer: bytes) -> "PrivateKey":
         return cls(int.from_bytes(buffer, "big") % curve_order)
 
     @classmethod
-    def key_gen(cls, ikm: bytes, key_info: bytes = b"")-> "PrivateKey":
+    def key_gen(cls, ikm: bytes, key_info: bytes = b"") -> "PrivateKey":
         salt = b"BLS-SIG-KEYGEN-SALT-"
         sk = 0
         while sk == 0:
@@ -38,7 +38,7 @@ class PrivateKey:
     def from_string(cls, text: str) -> "PrivateKey":
         hrp, typ, data = utils.decode_to_base256_with_type(text)
 
-        if hrp != PRIVATE_KEY_HRP:
+        if hrp != CryptoConfig.PRIVATE_KEY_HRP:
             msg = f"Invalid hrp: {hrp}"
             raise ValueError(msg)
 
@@ -58,7 +58,7 @@ class PrivateKey:
 
     def string(self) -> str:
         return utils.encode_from_base256_with_type(
-           CryptoConfig.  PRIVATE_KEY_HRP,
+            CryptoConfig.PRIVATE_KEY_HRP,
             SIGNATURE_TYPE_BLS,
             self.raw_bytes(),
         )

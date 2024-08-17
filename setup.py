@@ -1,5 +1,6 @@
 import codecs
 from pathlib import Path
+
 from setuptools import find_packages, setup
 
 # Get the directory where this setup.py file is located

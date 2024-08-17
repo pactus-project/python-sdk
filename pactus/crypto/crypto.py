@@ -4,7 +4,7 @@ class CryptoConfig:
     PRIVATE_KEY_HRP = "secret"
 
     @classmethod
-    def use_testnet(cls):
+    def use_testnet(cls) -> None:
         cls.ADDRESS_HRP = "tpc"
         cls.PUBLIC_KEY_HRP = "tpublic"
         cls.PRIVATE_KEY_HRP = "tsecret"

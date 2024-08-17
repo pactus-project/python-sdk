@@ -42,34 +42,58 @@ class TestBLSCrypto(unittest.TestCase):
         # self.assertTrue(pub.verify(msg, sig))
         # self.assertFalse(pub.verify(b"foo", sig))
 
-
     def test_key_gen(self):
         tests = [
             {"ikm": "", "sk": "Err"},
-            {"ikm": "00000000000000000000000000000000000000000000000000000000000000", "sk": "Err"},
-            {"ikm": "0000000000000000000000000000000000000000000000000000000000000000", "sk": "4d129a19df86a0f5345bad4cc6f249ec2a819ccc3386895beb4f7d98b3db6235"},
-            {"ikm": "2b1eb88002e83a622792d0b96d4f0695e328f49fdd32480ec0cf39c2c76463af", "sk": "0000f678e80740072a4a7fe8c7344db88a00ccc7db36aa51fa51f9c68e561584"},
+            {
+                "ikm": "00000000000000000000000000000000000000000000000000000000000000",
+                "sk": "Err",
+            },
+            {
+                "ikm": "0000000000000000000000000000000000000000000000000000000000000000",
+                "sk": "4d129a19df86a0f5345bad4cc6f249ec2a819ccc3386895beb4f7d98b3db6235",
+            },
+            {
+                "ikm": "2b1eb88002e83a622792d0b96d4f0695e328f49fdd32480ec0cf39c2c76463af",
+                "sk": "0000f678e80740072a4a7fe8c7344db88a00ccc7db36aa51fa51f9c68e561584",
+            },
             # Test vectors from EIP-2333
-            {"ikm": "c55257c360c07c72029aebc1b53c05ed0362ada38ead3e3e9efa3708e5349553"
-                    "1f09a6987599d18264c1e1c92f2cf141630c7a3c4ab7c81b2f001698e7463b04", "sk": "0d7359d57963ab8fbbde1852dcf553fedbc31f464d80ee7d40ae683122b45070"},
-            {"ikm": "3141592653589793238462643383279502884197169399375105820974944592", "sk": "41c9e07822b092a93fd6797396338c3ada4170cc81829fdfce6b5d34bd5e7ec7"},
-            {"ikm": "0099FF991111002299DD7744EE3355BBDD8844115566CC55663355668888CC00", "sk": "3cfa341ab3910a7d00d933d8f7c4fe87c91798a0397421d6b19fd5b815132e80"},
-            {"ikm": "d4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3", "sk": "2a0e28ffa5fbbe2f8e7aad4ed94f745d6bf755c51182e119bb1694fe61d3afca"},
+            {
+                "ikm": "c55257c360c07c72029aebc1b53c05ed0362ada38ead3e3e9efa3708e5349553"
+                "1f09a6987599d18264c1e1c92f2cf141630c7a3c4ab7c81b2f001698e7463b04",
+                "sk": "0d7359d57963ab8fbbde1852dcf553fedbc31f464d80ee7d40ae683122b45070",
+            },
+            {
+                "ikm": "3141592653589793238462643383279502884197169399375105820974944592",
+                "sk": "41c9e07822b092a93fd6797396338c3ada4170cc81829fdfce6b5d34bd5e7ec7",
+            },
+            {
+                "ikm": "0099FF991111002299DD7744EE3355BBDD8844115566CC55663355668888CC00",
+                "sk": "3cfa341ab3910a7d00d933d8f7c4fe87c91798a0397421d6b19fd5b815132e80",
+            },
+            {
+                "ikm": "d4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+                "sk": "2a0e28ffa5fbbe2f8e7aad4ed94f745d6bf755c51182e119bb1694fe61d3afca",
+            },
         ]
 
         for i, test in enumerate(tests):
             ikm = bytes.fromhex(test["ikm"])
             try:
-                sk = PrivateKey.from_seed(ikm)
+                sk = PrivateKey.key_gen(ikm)
                 if test["sk"] == "Err":
                     self.fail(f"Test '{i}' failed. Expected an error, but got none.")
                 else:
                     expected_sk = bytes.fromhex(test["sk"])
-                    self.assertEqual(sk.raw_bytes(), expected_sk,
-                                     f"Test '{i}' failed. Expected '{expected_sk}', but got '{sk.raw_bytes()}'.")
+                    self.assertEqual(
+                        sk.raw_bytes(),
+                        expected_sk,
+                        f"Test '{i}' failed. Expected '{expected_sk}', but got '{sk.raw_bytes()}'.",
+                    )
             except Exception as e:
                 if test["sk"] != "Err":
                     self.fail(f"Test '{i}' failed. Unexpected error: {e}")
+
 
 if __name__ == "__main__":
     unittest.main()

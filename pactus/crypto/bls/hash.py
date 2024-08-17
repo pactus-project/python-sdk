@@ -1,5 +1,5 @@
 # ruff: noqa: N803, N806  #  Variable `X` in function should be lowercase
-                          #  Argument name `X` should be lowercase
+#  Argument name `X` should be lowercase
 
 from __future__ import annotations
 
@@ -25,9 +25,7 @@ def hkdf_extract(salt: bytes | bytearray, ikm: bytes | bytearray) -> bytes:
     return hmac.new(salt, ikm, hashlib.sha256).digest()
 
 
-def hkdf_expand(
-    prk: bytes | bytearray, info: bytes | bytearray, length: int
-) -> bytes:
+def hkdf_expand(prk: bytes | bytearray, info: bytes | bytearray, length: int) -> bytes:
     """
     HKDF-Expand.
 
@@ -75,9 +73,7 @@ def xor(a: bytes, b: bytes) -> bytes:
     return bytes(_a ^ _b for _a, _b in zip(a, b))
 
 
-def expand_message_xmd(
-    msg: bytes, DST: bytes, len_in_bytes: int, hash_function: HASH
-) -> bytes:
+def expand_message_xmd(msg: bytes, DST: bytes, len_in_bytes: int, hash_function: HASH) -> bytes:
     b_in_bytes = hash_function().digest_size
     r_in_bytes = hash_function().block_size
     if len(DST) > 255:
@@ -87,9 +83,7 @@ def expand_message_xmd(
     if ell > 255:
         msg = "invalid len in bytes for hash function"
         raise ValueError(msg)
-    DST_prime = DST + i2osp(
-        len(DST), 1
-    )  # Append the length of the DST as a single byte
+    DST_prime = DST + i2osp(len(DST), 1)  # Append the length of the DST as a single byte
     Z_pad = b"\x00" * r_in_bytes
     l_i_b_str = i2osp(len_in_bytes, 2)
     b_0 = hash_function(Z_pad + msg + l_i_b_str + b"\x00" + DST_prime).digest()
