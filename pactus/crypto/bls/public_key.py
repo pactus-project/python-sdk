@@ -3,6 +3,7 @@ import hashlib
 from ripemd.ripemd160 import ripemd160
 
 from pactus.crypto.address import Address, AddressType
+from pactus.crypto import CryptoConfig
 from pactus.utils import utils
 
 from .bls12_381.bls_sig_g1 import verify
@@ -10,7 +11,6 @@ from .bls12_381.serdesZ import deserialize, serialize
 from .signature import DST, SIGNATURE_TYPE_BLS, Signature
 
 PUBLIC_KEY_SIZE = 96
-PUBLIC_KEY_HRP = "public"
 
 
 class PublicKey:
@@ -21,7 +21,7 @@ class PublicKey:
     def from_string(cls, text: str) -> "PublicKey":
         hrp, typ, data = utils.decode_to_base256_with_type(text)
 
-        if hrp != PUBLIC_KEY_HRP:
+        if hrp != CryptoConfig.PUBLIC_KEY_HRP:
             msg = f"Invalid hrp: {hrp}"
             raise ValueError(msg)
 
@@ -42,16 +42,16 @@ class PublicKey:
 
     def string(self) -> str:
         return utils.encode_from_base256_with_type(
-            PUBLIC_KEY_HRP,
+            CryptoConfig.PUBLIC_KEY_HRP,
             SIGNATURE_TYPE_BLS,
             self.raw_bytes(),
         )
 
     def account_address(self) -> Address:
-        return self._make_address(AddressType.BLSAccount)
+        return self._make_address(AddressType.BLS_ACCOUNT)
 
     def validator_address(self) -> Address:
-        return self._make_address(AddressType.Validator)
+        return self._make_address(AddressType.VALIDATOR)
 
     def _make_address(self, address_type: AddressType) -> Address:
         blake2b = hashlib.blake2b(digest_size=32)

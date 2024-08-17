@@ -7,11 +7,11 @@ from pactus.types.amount import Amount
 
 
 class PayloadType(Enum):
-    Transfer = 1
-    Bond = 2
-    Sortition = 3
-    Unbond = 4
-    Withdraw = 5
+    TRANSFER = 1
+    BOND = 2
+    SORTITION = 3
+    UNBOND = 4
+    WITHDRAW = 5
 
 
 class Payload(ABC):
@@ -42,7 +42,7 @@ class TransferPayload:
         encoding.append_var_int(buf, self.amount.value)
 
     def get_type(self) -> PayloadType:
-        return PayloadType.Transfer
+        return PayloadType.TRANSFER
 
 
 class BondPayload:
@@ -65,7 +65,7 @@ class BondPayload:
         encoding.append_var_int(buf, self.stake.value)
 
     def get_type(self) -> PayloadType:
-        return PayloadType.Bond
+        return PayloadType.BOND
 
 
 class UnbondPayload:
@@ -76,7 +76,7 @@ class UnbondPayload:
         encoding.append_fixed_bytes(buf, self.validator.raw_bytes())
 
     def get_type(self) -> PayloadType:
-        return PayloadType.Unbond
+        return PayloadType.UNBOND
 
 
 class WithdrawPayload:
@@ -91,4 +91,4 @@ class WithdrawPayload:
         encoding.append_var_int(buf, self.amount)
 
     def get_type(self) -> PayloadType:
-        return PayloadType.Withdraw
+        return PayloadType.WITHDRAW

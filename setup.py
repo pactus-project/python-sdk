@@ -1,25 +1,24 @@
 import codecs
 from pathlib import Path
-
 from setuptools import find_packages, setup
 
-here = Path.abspath(Path.dirname(__file__))
+# Get the directory where this setup.py file is located
+here = Path(__file__).resolve().parent
 
 with codecs.open(here / "README.md", encoding="utf-8") as fh:
     long_description = fh.read()
 
 NAME = "pactus-sdk"
 VERSION = "1.0.0"
-AUTHOR = "Pactus Foundation"
+AUTHOR = "Pactus Development Team"
 AUTHOR_EMAIL = "info@pactus.org"
-DESCRIPTION = "Pactus development kit"
+DESCRIPTION = "Pactus Development Kit"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
 URL = "https://github.com/pactus-project/python-sdk"
 
 # Package dependencies
 REQUIRED = [
-    "ripemd",
-    "bech32m",
+    "ripemd-hash",
 ]
 
 CLASSIFIERS = [
