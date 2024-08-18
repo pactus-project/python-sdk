@@ -1,34 +1,51 @@
-from setuptools import setup, find_packages
 import codecs
-import os
+from pathlib import Path
 
-here = os.path.abspath(os.path.dirname(__file__))
+from setuptools import find_packages, setup
 
-with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
-    long_description = "\n" + fh.read()
+# Get the directory where this setup.py file is located
+here = Path(__file__).resolve().parent
 
-VERSION = "0.0.1"
-DESCRIPTION = "Pactus development kit"
-LONG_DESCRIPTION = "This SDK is used to provide python utilities to interact with the Pactus blockchain, create transactions, sign messages or generate keys."
+with codecs.open(here / "README.md", encoding="utf-8") as fh:
+    long_description = fh.read()
 
-# Setting up
+NAME = "pactus-sdk"
+VERSION = "1.0.0"
+AUTHOR = "Pactus Development Team"
+AUTHOR_EMAIL = "info@pactus.org"
+DESCRIPTION = "Pactus Development Kit"
+LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
+URL = "https://github.com/pactus-project/python-sdk"
+
+# Package dependencies
+REQUIRED = [
+    "ripemd-hash",
+]
+
+CLASSIFIERS = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Operating System :: OS Independent",
+]
+
 setup(
-    name="pactus-sdk",
+    name=NAME,
     version=VERSION,
-    author="Pactus foundation",
-    author_email="<info@pactus.org>",
+    author=AUTHOR,
+    author_email=AUTHOR_EMAIL,
     description=DESCRIPTION,
-    long_description_content_type="text/markdown",
     long_description=long_description,
+    long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,
+    url=URL,
     packages=find_packages(),
-    install_requires=["ripemd", "bech32m"],
+    install_requires=REQUIRED,
     keywords=["pactus", "blockchain", "web3", "dapp", "bls", "bech32"],
-    classifiers=[
-        "Development Status :: 1 - Planning",
-        "Intended Audience :: Developers",
-        "Programming Language :: Python :: 3",
-        "Operating System :: Unix",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
-    ],
+    classifiers=CLASSIFIERS,
+    python_requires=">=3.6",
 )
