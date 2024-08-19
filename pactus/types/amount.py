@@ -42,7 +42,7 @@ class Amount:
     @classmethod
     def from_string(cls, s: str) -> "Amount":
         """
-        Parses a string representing a value in PAC, converts it to NanoPAC,
+        Parse a string representing a value in PAC, converts it to NanoPAC,
         and updates the Amount object.
 
         If the string cannot be parsed as a float, a ValueError is raised.
