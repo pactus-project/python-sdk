@@ -2,7 +2,7 @@ import argparse
 import secrets
 
 from pactus.crypto import CryptoConfig
-from pactus.crypto.address import AddressType
+from pactus.crypto.address import AddressType, Address
 from pactus.crypto.bls.private_key import PrivateKey, PublicKey
 
 
@@ -36,16 +36,23 @@ def main() -> None:
             ikm = secrets.token_bytes(32)
             sec = PrivateKey.key_gen(ikm)
             pub = sec.public_key()
-            pub.validator_address()
+            addr = pub.validator_address()
+            show(sec, pub, addr)
 
         case AddressType.BLS_ACCOUNT:
             ikm = secrets.token_bytes(32)
             sec = PrivateKey.key_gen(ikm)
             pub = sec.public_key()
-            pub.account_address()
-
+            addr = pub.account_address()
+            show(sec, pub, addr)
         case _:
             return
+
+
+def show(sec: PrivateKey, pub: PublicKey, addr: Address):
+    print(f"Your PrivateKey: {sec.string()}")
+    print(f"Your PublicKey: {pub.string()}")
+    print(f"Your Address: {addr.string()}")
 
 
 if __name__ == "__main__":
