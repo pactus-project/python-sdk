@@ -27,9 +27,6 @@ def main() -> None:
     if args.testnet:
         CryptoConfig.use_testnet()
 
-    sec: PrivateKey = None
-    pub: PublicKey = None
-
     match AddressType(args.address_type):
         case AddressType.VALIDATOR:
             # Generate a cryptographically secure IKM (Initial Keying Material).
