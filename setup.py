@@ -20,6 +20,8 @@ URL = "https://github.com/pactus-project/python-sdk"
 # Package dependencies
 REQUIRED = [
     "ripemd-hash",
+    "grpcio",
+    "grpcio-tools",
 ]
 
 CLASSIFIERS = [
