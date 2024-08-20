@@ -3,7 +3,7 @@
 
 import grpc
 
-import network_pb2 as network__pb2
+from . import network_pb2 as network__pb2
 
 
 class NetworkStub(object):
