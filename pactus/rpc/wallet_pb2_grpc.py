@@ -3,7 +3,7 @@
 
 import grpc
 
-import wallet_pb2 as wallet__pb2
+from . import wallet_pb2 as wallet__pb2
 
 
 class WalletStub(object):

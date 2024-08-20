@@ -3,7 +3,7 @@
 
 import grpc
 
-import transaction_pb2 as transaction__pb2
+from . import transaction_pb2 as transaction__pb2
 
 
 class TransactionStub(object):

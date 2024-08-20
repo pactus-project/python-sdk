@@ -3,7 +3,7 @@
 
 import grpc
 
-import utils_pb2 as utils__pb2
+from . import utils_pb2 as utils__pb2
 
 
 class UtilsStub(object):
