@@ -38,7 +38,7 @@ class PrivateKey:
             msg = "Private key data must be 32 bytes long"
             raise ValueError(msg)
 
-        scalar = ed25519.Ed25519PrivateKey.from_private_bytes(data)
+        scalar = ed25519.Ed25519PrivateKey.from_private_bytes(bytes(data))
         return cls(scalar)
 
     def raw_bytes(self) -> bytes:

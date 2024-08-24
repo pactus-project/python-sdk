@@ -32,7 +32,7 @@ class PublicKey:
             msg = "Public key data must be 96 bytes long"
             raise ValueError(msg)
 
-        pub_key = ed25519.Ed25519PublicKey.from_public_bytes(data)
+        pub_key = ed25519.Ed25519PublicKey.from_public_bytes(bytes(data))
 
         return cls(pub_key)
 
