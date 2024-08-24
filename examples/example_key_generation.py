@@ -5,6 +5,9 @@ from pactus.crypto import CryptoConfig
 from pactus.crypto.address import AddressType
 from pactus.crypto.bls.private_key import PrivateKey as BLSPrivateKey
 from pactus.crypto.ed25519.private_key import PrivateKey as Ed25519PrivateKey
+from pactus.crypto.private_key import PrivateKey
+from pactus.crypto.public_key import PublicKey
+from pactus.crypto.address import Address
 
 
 def main() -> None:
@@ -54,7 +57,7 @@ def main() -> None:
             return
 
 
-def show(sec: any, pub: any, addr: any):
+def show(sec: PrivateKey, pub: PublicKey, addr: Address):
     print(f"Your PrivateKey: {sec.string()}")
     print(f"Your PublicKey: {pub.string()}")
     print(f"Your Address: {addr.string()}")
