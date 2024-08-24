@@ -22,6 +22,7 @@ REQUIRED = [
     "ripemd-hash",
     "grpcio",
     "grpcio-tools",
+    "cryptography"
 ]
 
 CLASSIFIERS = [
