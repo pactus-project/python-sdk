@@ -2,8 +2,10 @@ import argparse
 import secrets
 
 from pactus.crypto import CryptoConfig
-from pactus.crypto.address import AddressType, Address
-from pactus.crypto.bls.private_key import PrivateKey, PublicKey
+from pactus.crypto.address import AddressType
+from pactus.crypto.bls.private_key import PrivateKey
+
+from pactus.crypto.ed25519.private_key import PrivateKey as Edprivk
 
 
 def main() -> None:
@@ -12,9 +14,9 @@ def main() -> None:
     parser.add_argument(
         "--address-type",
         type=int,
-        choices=[1, 2],
+        choices=[1, 2, 3],
         default=2,
-        help="Type of address to generate: 1 for Validator, 2 for BLSAccount (default: 2)",
+        help="Type of address to generate: 1 for Validator, 2 for BLSAccount, 3 for ED25519Account (default: 2)",
     )
 
     parser.add_argument(
@@ -42,11 +44,18 @@ def main() -> None:
             pub = sec.public_key()
             addr = pub.account_address()
             show(sec, pub, addr)
+
+        case AddressType.ED25519_ACCOUNT:
+            sec = Edprivk.key_gen()
+            pub = sec.public_key()
+            addr = pub.account_address()
+            show(sec, pub, addr)
+
         case _:
             return
 
 
-def show(sec: PrivateKey, pub: PublicKey, addr: Address):
+def show(sec: any, pub: any, addr: any):
     print(f"Your PrivateKey: {sec.string()}")
     print(f"Your PublicKey: {pub.string()}")
     print(f"Your Address: {addr.string()}")
