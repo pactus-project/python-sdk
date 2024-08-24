@@ -8,6 +8,7 @@ from pactus.crypto.ed25519.private_key import PrivateKey as Ed25519PrivateKey
 from pactus.crypto.ed25519.public_key import PublicKey as Ed25519PublicKey
 from pactus.crypto.ed25519.signature import Signature as Ed25519Signature
 
+
 class TestBLSCrypto(unittest.TestCase):
     def test_private_key_to_public_key(self):
         prv_str = "SECRET1PDRWTLP5PX0FAHDX39GXZJP7FKZFALML0D5U9TT9KVQHDUC99CMGQQJVK67"
@@ -97,10 +98,13 @@ class TestBLSCrypto(unittest.TestCase):
                 if test["sk"] != "Err":
                     self.fail(f"Test '{i}' failed. Unexpected error: {e}")
 
+
 class TestEd25519Crypto(unittest.TestCase):
     def test_private_key_to_public_key(self):
         prv_str = "SECRET1RJ6STNTA7Y3P2QLQF8A6QCX05F2H5TFNE5RSH066KZME4WVFXKE7QW097LG"
-        expected_pub_str = "public1ry2cqw5yfhmr7ve8nctgzg6wgcyc73xqr2uud486jgsq7wu253egsx6msep"
+        expected_pub_str = (
+            "public1ry2cqw5yfhmr7ve8nctgzg6wgcyc73xqr2uud486jgsq7wu253egsx6msep"
+        )
 
         prv = Ed25519PrivateKey.from_string(prv_str)
         pub = prv.public_key()
@@ -108,7 +112,6 @@ class TestEd25519Crypto(unittest.TestCase):
 
         self.assertEqual(pub_str, expected_pub_str)
 
-    
     def test_public_key_to_address(self):
         pub_str = "public1ry2cqw5yfhmr7ve8nctgzg6wgcyc73xqr2uud486jgsq7wu253egsx6msep"
         expected_acc_addr_str = "pc1reer4damrrdxznmrrl7a9acy7x5cwe6dyt8ftv4"
@@ -137,6 +140,7 @@ class TestEd25519Crypto(unittest.TestCase):
         self.assertFalse(pub.verify(msg, invalid_sig))
         self.assertEqual(sig.string(), valid_sig.string())
         self.assertEqual(sig.raw_bytes(), valid_sig.raw_bytes())
+
 
 if __name__ == "__main__":
     unittest.main()
