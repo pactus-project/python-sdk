@@ -13,6 +13,7 @@ class AddressType(Enum):
     TREASURY = 0
     VALIDATOR = 1
     BLS_ACCOUNT = 2
+    ED25519_ACCOUNT = 3
 
 
 class Address:
@@ -36,7 +37,7 @@ class Address:
             raise ValueError(msg)
 
         typ = AddressType(typ)
-        if typ in (AddressType.VALIDATOR, AddressType.BLS_ACCOUNT):
+        if typ in (AddressType.VALIDATOR, AddressType.BLS_ACCOUNT, AddressType.ED25519_ACCOUNT):
             if len(data) != 20:
                 msg = f"Invalid length: {len(data) + 1}"
                 raise ValueError(msg)
@@ -67,7 +68,7 @@ class Address:
 
     def is_account_address(self) -> bool:
         t = self.address_type()
-        return t in (AddressType.TREASURY, AddressType.BLS_ACCOUNT)
+        return t in (AddressType.TREASURY, AddressType.BLS_ACCOUNT, AddressType.ED25519_ACCOUNT)
 
     def is_validator_address(self) -> bool:
         return self.address_type() == AddressType.VALIDATOR
