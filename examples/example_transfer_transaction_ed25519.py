@@ -16,7 +16,7 @@ def main() -> None:
 
     sender = Address.from_string("tpc1rv75w2y9hj64ht9spxx0e5s7avpclk9ey2eaavf")
     sec = PrivateKey.from_string(
-        "tsecret1rglsgpylqrvet27azuvs9tsp8mpgf9lh4u4rkkarmcatfk9l0kucs7dcc09"
+        "TSECRET1RGLSGPYLQRVET27AZUVS9TSP8MPGF9LH4U4RKKARMCATFK9L0KUCS7DCC09"
     )
 
     tx = Transaction.create_transfer_tx(lock_time, sender, receiver, amount, fee, memo)
