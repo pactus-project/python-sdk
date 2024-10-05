@@ -18,7 +18,7 @@ LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
 URL = "https://github.com/pactus-project/python-sdk"
 
 # Package dependencies
-REQUIRED = ["ripemd-hash", "grpcio", "grpcio-tools", "cryptography"]
+REQUIRED = ["ripemd-hash", "grpcio", "grpcio-tools", "cryptography>=43.0"]
 
 CLASSIFIERS = [
     "Development Status :: 5 - Production/Stable",

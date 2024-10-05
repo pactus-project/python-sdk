@@ -26,8 +26,6 @@ exclude = [
     "node_modules",
     "site-packages",
     "venv",
-    "bls/*",
-    "pactus/__init__.py",
 ]
 
 # Same as Black.
