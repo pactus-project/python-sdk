@@ -10,7 +10,7 @@ with codecs.open(here / "README.md", encoding="utf-8") as fh:
     long_description = fh.read()
 
 NAME = "pactus-sdk"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 AUTHOR = "Pactus Development Team"
 AUTHOR_EMAIL = "info@pactus.org"
 DESCRIPTION = "Pactus Development Kit"
