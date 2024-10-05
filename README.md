@@ -50,6 +50,16 @@ ruff check # running linter
 
 Contributions are welcome! Feel free to add features, fix bugs, or improve documentation via pull requests.
 
+## Publishing to PyPi
+
+To deploy `pactus-sdk` and create a release, tag the new version and push it to GitHub.
+
+```bash
+git tag -s -a v1.x.y -m "Version 1.x.y"
+```
+
+After publishing, make sure to update the version number in `setup.py`.
+
 ## License
 
 This project is licensed under the [MIT License](./LICENSE).
