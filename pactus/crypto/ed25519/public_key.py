@@ -1,5 +1,6 @@
 import hashlib
 
+from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric import ed25519
 from ripemd.ripemd160 import ripemd160
 
@@ -56,7 +57,7 @@ class PublicKey:
     def verify(self, msg: bytes, sig: Signature) -> bool:
         try:
             self.pub.verify(sig.raw_bytes(), msg)
-        except:
+        except InvalidSignature:
             return False
         else:
             return True
