@@ -3,17 +3,17 @@ import math
 NANO_PAC_PER_PAC = 1e9
 MAX_NANO_PAC = 42e6 * NANO_PAC_PER_PAC
 
-
 class Amount:
     """
-    The Amount class represents a quantity in NanoPAC.
+    Amount represents the atomic unit in the Pactus blockchain.
+    Each unit is equal to 1e-9 of a PAC.
 
-    The `from_NanoPAC` method creates an Amount from a floating-point value
+    The `from_pac` method creates an Amount from a floating-point value
     representing an amount in PAC. It raises an error if the value is NaN or
-    +-Infinity, but it does not check whether the amount exceeds the total
+    ±Infinity, but it does not check whether the amount exceeds the total
     amount of PAC producible. This method is specifically for converting PAC
-    to NanoPAC. For creating a new Amount with an integer value representing
-    NanoPAC, you can initialize the Amount directly with an integer.
+    to NanoPAC. To create a new Amount with an integer value representing
+    NanoPAC, you can use the `from_nano_pac` method.
     """
 
     def __init__(self, amt: int = 0) -> None:
@@ -26,18 +26,23 @@ class Amount:
         return False
 
     @classmethod
-    def from_nano_pac(cls, f: float) -> "Amount":
-        """
-        Convert a floating-point value in PAC to NanoPAC and stores it in the Amount instance.
+    def from_nano_pac(cls, a: int) -> "Amount":
+        """Store the value as NanoPAC in the Amount instance."""
+        return cls(a)
 
-        The conversion is invalid if the floating-point value is NaN or +-Infinity,
+    @classmethod
+    def from_pac(cls, f: float) -> "Amount":
+        """
+        Convert a floating-point value in PAC to NanoPAC and store it in the Amount instance.
+
+        The conversion is invalid if the floating-point value is NaN or ±Infinity,
         in which case a ValueError is raised.
         """
         if math.isinf(f) or math.isnan(f):
             msg = f"invalid PAC amount: {f}"
             raise ValueError(msg)
 
-        return cls(int(cls.round(f * NANO_PAC_PER_PAC)))
+        return cls.from_nano_pac(int(cls.round(f * NANO_PAC_PER_PAC)))
 
     @classmethod
     def from_string(cls, s: str) -> "Amount":
@@ -53,7 +58,7 @@ class Amount:
             msg = "invalid PAC amount"
             raise ValueError(msg) from e
 
-        return cls.from_nano_pac(f)
+        return cls.from_pac(f)
 
     def round(self: float) -> float:
         """
