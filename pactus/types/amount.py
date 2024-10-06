@@ -42,7 +42,7 @@ class Amount:
             msg = f"invalid PAC amount: {f}"
             raise ValueError(msg)
 
-        return cls(int(cls.round(f * NANO_PAC_PER_PAC)))
+        return cls.from_nano_pac(int(cls.round(f * NANO_PAC_PER_PAC)))
 
     @classmethod
     def from_string(cls, s: str) -> "Amount":
