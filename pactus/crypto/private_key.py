@@ -1,13 +1,17 @@
-from abc import ABC, abstractmethod
+from __future__ import annotations
 
-from .public_key import PublicKey
-from .signature import Signature
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .public_key import PublicKey
+    from .signature import Signature
 
 
 class PrivateKey(ABC):
     @classmethod
     @abstractmethod
-    def from_string(cls, text: str) -> "PrivateKey":
+    def from_string(cls, text: str) -> PrivateKey:
         pass
 
     @abstractmethod

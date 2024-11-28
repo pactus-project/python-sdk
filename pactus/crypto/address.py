@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum
 
 from pactus.crypto import CryptoConfig
@@ -27,7 +29,7 @@ class Address:
         self.data.extend(data)
 
     @classmethod
-    def from_string(cls, text: str) -> "Address":
+    def from_string(cls, text: str) -> Address:
         if text == TREASURY_ADDRESS_STRING:
             return bytes([0])
 
