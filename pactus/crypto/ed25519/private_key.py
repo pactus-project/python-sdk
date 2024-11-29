@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from cryptography.hazmat.primitives.asymmetric import ed25519
 
 from pactus.crypto import CryptoConfig
@@ -14,16 +16,16 @@ class PrivateKey:
         self.scalar = scalar
 
     @classmethod
-    def from_bytes(cls, buffer: bytes) -> "PrivateKey":
+    def from_bytes(cls, buffer: bytes) -> PrivateKey:
         return cls(ed25519.Ed25519PrivateKey.from_private_bytes(buffer))
 
     @classmethod
-    def key_gen(cls) -> "PrivateKey":
+    def key_gen(cls) -> PrivateKey:
         sk = ed25519.Ed25519PrivateKey.generate()
         return cls(sk)
 
     @classmethod
-    def from_string(cls, text: str) -> "PrivateKey":
+    def from_string(cls, text: str) -> PrivateKey:
         hrp, typ, data = utils.decode_to_base256_with_type(text)
 
         if hrp != CryptoConfig.PRIVATE_KEY_HRP:

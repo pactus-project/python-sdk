@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from math import ceil, log2
 
 from pactus.crypto import CryptoConfig
@@ -18,11 +20,11 @@ class PrivateKey:
         self.scalar = scalar
 
     @classmethod
-    def from_bytes(cls, buffer: bytes) -> "PrivateKey":
+    def from_bytes(cls, buffer: bytes) -> PrivateKey:
         return cls(int.from_bytes(buffer, "big") % curve_order)
 
     @classmethod
-    def key_gen(cls, ikm: bytes, key_info: bytes = b"") -> "PrivateKey":
+    def key_gen(cls, ikm: bytes, key_info: bytes = b"") -> PrivateKey:
         salt = b"BLS-SIG-KEYGEN-SALT-"
         sk = 0
         while sk == 0:
@@ -35,7 +37,7 @@ class PrivateKey:
         return cls(sk)
 
     @classmethod
-    def from_string(cls, text: str) -> "PrivateKey":
+    def from_string(cls, text: str) -> PrivateKey:
         hrp, typ, data = utils.decode_to_base256_with_type(text)
 
         if hrp != CryptoConfig.PRIVATE_KEY_HRP:

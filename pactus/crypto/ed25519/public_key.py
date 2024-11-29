@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import hashlib
 
 from cryptography.exceptions import InvalidSignature
@@ -18,7 +20,7 @@ class PublicKey:
         self.pub = pub
 
     @classmethod
-    def from_string(cls, text: str) -> "PublicKey":
+    def from_string(cls, text: str) -> PublicKey:
         hrp, typ, data = utils.decode_to_base256_with_type(text)
 
         if hrp != CryptoConfig.PUBLIC_KEY_HRP:

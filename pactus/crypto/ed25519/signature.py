@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 SIGNATURE_SIZE = 64
 SIGNATURE_TYPE_ED25519 = 3
 
@@ -7,7 +9,7 @@ class Signature:
         self.sig = sig
 
     @classmethod
-    def from_string(cls, text: str) -> "Signature":
+    def from_string(cls, text: str) -> Signature:
         data = bytes.fromhex(text)
 
         if len(data) != SIGNATURE_SIZE:

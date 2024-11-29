@@ -3,6 +3,7 @@ import math
 NANO_PAC_PER_PAC = 1e9
 MAX_NANO_PAC = 42e6 * NANO_PAC_PER_PAC
 
+
 class Amount:
     """
     Amount represents the atomic unit in the Pactus blockchain.

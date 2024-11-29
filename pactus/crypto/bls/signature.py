@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from .bls12_381.bls_sig_g1 import aggregate
 from .bls12_381.serdesZ import deserialize, serialize
 
 SIGNATURE_SIZE = 48
@@ -10,7 +13,7 @@ class Signature:
         self.point_g1 = point_g1
 
     @classmethod
-    def from_string(cls, text: str) -> "Signature":
+    def from_string(cls, text: str) -> Signature:
         data = bytes.fromhex(text)
 
         if len(data) != SIGNATURE_SIZE:
@@ -20,6 +23,13 @@ class Signature:
         point_g1 = deserialize(bytes(data), is_ell2=False)
 
         return cls(point_g1)
+
+    @classmethod
+    def aggregate(cls, sigs: list[Signature]) -> Signature:
+        point_g1s = []
+        point_g1s.extend(sig for sig in sigs)
+
+        return cls(aggregate(point_g1s))
 
     def raw_bytes(self) -> bytes:
         return serialize(self.point_g1)
