@@ -3,7 +3,7 @@ import unittest
 from pactus.crypto.address import Address
 from pactus.crypto.bls.private_key import PrivateKey
 from pactus.transaction.transaction import Transaction
-from pactus.types.amount import Amount
+from pactus.amount import Amount
 
 
 class TestTransaction(unittest.TestCase):

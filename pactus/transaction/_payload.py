@@ -3,7 +3,7 @@ from enum import Enum
 
 from pactus.crypto.address import Address
 from pactus.encoding import encoding
-from pactus.types.amount import Amount
+from pactus.amount import Amount
 
 
 class PayloadType(Enum):

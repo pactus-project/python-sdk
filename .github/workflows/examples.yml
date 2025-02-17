@@ -1,0 +1,32 @@
+name: Running Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.8'
+
+    - name: Install locally
+      run: |
+        pip install -e .
+
+    - name: Run all Examples
+      run: |
+        for example in examples/*.py; do
+          python "$example"
+        done
