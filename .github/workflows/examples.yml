@@ -28,5 +28,5 @@ jobs:
     - name: Run all Examples
       run: |
         for example in examples/*.py; do
-          python "$example"
+          python3 "$example"
         done
