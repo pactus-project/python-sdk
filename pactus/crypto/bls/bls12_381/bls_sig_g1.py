@@ -69,8 +69,13 @@ verify_aug = partial(_verify_aug, ver_fn=verify)
 
 
 # signature aggregation
-def aggregate(sigs):
+def aggregate_sigs(sigs):
     return reduce(point_add, sigs)
+
+
+# public key aggregation
+def aggregate_pubs(pubs):
+    return reduce(point_add, pubs)
 
 
 # aggregate verification

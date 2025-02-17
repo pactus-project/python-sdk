@@ -8,7 +8,7 @@ from pactus.crypto import CryptoConfig
 from pactus.crypto.address import Address, AddressType
 from pactus.utils import utils
 
-from .bls12_381.bls_sig_g1 import verify
+from .bls12_381.bls_sig_g1 import aggregate_pubs, verify
 from .bls12_381.serdesZ import deserialize, serialize
 from .signature import DST, SIGNATURE_TYPE_BLS, Signature
 
@@ -38,6 +38,13 @@ class PublicKey:
         point_g2 = deserialize(bytes(data), is_ell2=True)
 
         return cls(point_g2)
+
+    @classmethod
+    def aggregate(cls, pubs: list[PublicKey]) -> PublicKey:
+        point_g2s = []
+        point_g2s.extend(pub.point_g2 for pub in pubs)
+
+        return cls(aggregate_pubs(point_g2s))
 
     def raw_bytes(self) -> bytes:
         return serialize(self.point_g2)

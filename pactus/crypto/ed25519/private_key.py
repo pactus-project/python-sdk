@@ -20,8 +20,9 @@ class PrivateKey:
         return cls(ed25519.Ed25519PrivateKey.from_private_bytes(buffer))
 
     @classmethod
-    def key_gen(cls) -> PrivateKey:
+    def random(cls) -> PrivateKey:
         sk = ed25519.Ed25519PrivateKey.generate()
+
         return cls(sk)
 
     @classmethod
