@@ -44,9 +44,9 @@ verify_aug = partial(_verify_aug, ver_fn=verify)
 
 # aggregate verification
 def aggregate_verify(pks, msgs, sig, ciphersuite):
-    assert len(pks) == len(
-        msgs
-    ), "FAIL: aggregate_verify needs same number of sigs and msgs"
+    assert len(pks) == len(msgs), (
+        "FAIL: aggregate_verify needs same number of sigs and msgs"
+    )
     if not subgroup_check_g2(sig):
         return False
     Qs = [None] * (1 + len(msgs))
