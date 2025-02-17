@@ -1,4 +1,4 @@
-name: Running Tests
+name: Running Examples
 
 on:
   push:
@@ -25,6 +25,8 @@ jobs:
       run: |
         pip install -e .
 
-    - name: Run tests
+    - name: Run all Examples
       run: |
-        python3 -m unittest discover tests
+        for example in examples/*.py; do
+          python3 "$example"
+        done

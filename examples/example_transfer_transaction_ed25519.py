@@ -2,7 +2,7 @@ from pactus.crypto import CryptoConfig
 from pactus.crypto.address import Address
 from pactus.crypto.ed25519.private_key import PrivateKey
 from pactus.transaction.transaction import Transaction
-from pactus.types.amount import Amount
+from pactus.amount import Amount
 
 
 def main() -> None:

@@ -1,6 +1,6 @@
 import unittest
 
-from pactus.types.amount import NANO_PAC_PER_PAC, Amount
+from pactus.amount import NANO_PAC_PER_PAC, Amount
 
 
 class TestAmount(unittest.TestCase):

@@ -75,9 +75,9 @@ def aggregate(sigs):
 
 # aggregate verification
 def aggregate_verify(pks, msgs, sig, ciphersuite):
-    assert len(pks) == len(
-        msgs
-    ), "FAIL: aggregate_verify needs same number of sigs and msgs"
+    assert len(pks) == len(msgs), (
+        "FAIL: aggregate_verify needs same number of sigs and msgs"
+    )
     if not subgroup_check_g1(sig):
         return False
     Ps = [None] * (1 + len(msgs))
@@ -103,9 +103,9 @@ aggregate_verify_basic = partial(_agg_ver_nul, ver_fn=aggregate_verify)
 
 # aggregate verification with message augmentation
 def _agg_ver_aug(pks, msgs, sig, ciphersuite, ver_fn):
-    assert len(pks) == len(
-        msgs
-    ), "FAIL: aggregate_verify_aug needs same number of sigs and msgs"
+    assert len(pks) == len(msgs), (
+        "FAIL: aggregate_verify_aug needs same number of sigs and msgs"
+    )
     msgs_aug = [serialize(pk, True) + msg for (pk, msg) in zip(pks, msgs)]
     return ver_fn(pks, msgs_aug, sig, ciphersuite)
 
