@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import secrets
 from math import ceil, log2
 
 from pactus.crypto import CryptoConfig
@@ -24,7 +25,7 @@ class PrivateKey:
         return cls(int.from_bytes(buffer, "big") % curve_order)
 
     @classmethod
-    def key_gen(cls, ikm: bytes, key_info: bytes = b"") -> PrivateKey:
+    def key_gen(cls, ikm: bytes = [], key_info: bytes = b"") -> PrivateKey:
         salt = b"BLS-SIG-KEYGEN-SALT-"
         sk = 0
         while sk == 0:
@@ -35,6 +36,12 @@ class PrivateKey:
             sk = os2ip(okm) % curve_order
 
         return cls(sk)
+
+    @classmethod
+    def random(cls) -> PrivateKey:
+        ikm = secrets.token_bytes(32)
+
+        return cls.key_gen(ikm)
 
     @classmethod
     def from_string(cls, text: str) -> PrivateKey:

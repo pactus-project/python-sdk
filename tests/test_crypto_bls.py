@@ -94,6 +94,34 @@ class TestBLSCrypto(unittest.TestCase):
                 if test["sk"] != "Err":
                     self.fail(f"Test '{i}' failed. Unexpected error: {e}")
 
+    def test_aggregate_sig(self):
+        sig1 = BLSSignature.from_string(
+            "923d67a8624cbb7972b29328e15ec76cc846076ccf00a9e94d991c677846f334ae4ba4551396fbcd6d1cab7593baf3b7"
+        )
+        sig2 = BLSSignature.from_string(
+            "ab025936daaed80ca2f85a418c8a47c3d9f4137d7b7651ca52646260d2018e55628bba118d4993a3aa75de268d55e72b"
+        )
+
+        agg = BLSSignature.aggregate([sig1, sig2])
+        self.assertEqual(
+            agg.string(),
+            "ad747172697127cb08dda29a386e106eb24ab0edfbc044014c3bd7a5f583cc38b3a223ff2c1df9c0b4df110630e6946b",
+        )
+
+    def test_aggregate_pub(self):
+        pub1 = BLSPublicKey.from_string(
+            "public1p4u8hfytl2pj6l9rj0t54gxcdmna4hq52ncqkkqjf3arha5mlk3x4mzpyjkhmdl20jae7f65aamjrvqcvf4sudcapz52ctcwc8r9wz3z2gwxs38880cgvfy49ta5ssyjut05myd4zgmjqstggmetyuyg7v5jhx47a"
+        )
+        pub2 = BLSPublicKey.from_string(
+            "public1pkms34vh00p0jwpdrv6hpqzsx3u26v547948h38wzpp0vc7j408sdy5cql5w5s4rpz60jnzm8rqw4crcw00lgrjeqydpagwstfgdfd79p9yr6rlrr2edtjaqp0shreqxmx0sk4gwlz336hyvnzh7lquxgwcw5nynk"
+        )
+
+        agg = BLSPublicKey.aggregate([pub1, pub2])
+        self.assertEqual(
+            agg.string(),
+            "public1pk5pfgdfe9l6q8mc03wfksx2l4r0h3hrx309sjcyuaredzh5krsfh8a86fuk0kcv2nslcduwz3w0zyqlvv2d42ne04c87hha5dw7dc9r2au5l7vhrruud7wf9u5k4fzg5rma6n940uqgfpjph8d9yg20dzswk7wxj",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

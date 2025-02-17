@@ -1,5 +1,4 @@
 import argparse
-import secrets
 
 from pactus.crypto import CryptoConfig
 from pactus.crypto.address import AddressType
@@ -34,21 +33,19 @@ def main() -> None:
     match AddressType(args.address_type):
         case AddressType.VALIDATOR:
             # Generate a cryptographically secure IKM (Initial Keying Material).
-            ikm = secrets.token_bytes(32)
-            sec = BLSPrivateKey.key_gen(ikm)
+            sec = BLSPrivateKey.random()
             pub = sec.public_key()
             addr = pub.validator_address()
             show(sec, pub, addr)
 
         case AddressType.BLS_ACCOUNT:
-            ikm = secrets.token_bytes(32)
-            sec = BLSPrivateKey.key_gen(ikm)
+            sec = BLSPrivateKey.random()
             pub = sec.public_key()
             addr = pub.account_address()
             show(sec, pub, addr)
 
         case AddressType.ED25519_ACCOUNT:
-            sec = Ed25519PrivateKey.key_gen()
+            sec = Ed25519PrivateKey.random()
             pub = sec.public_key()
             addr = pub.account_address()
             show(sec, pub, addr)
