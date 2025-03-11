@@ -79,7 +79,13 @@ class Transaction:
         return cls(lock_time, fee, memo, payload)
 
     def _get_unsigned_bytes(self, buf: bytes) -> bytes:
-        """Get unsigned bytes of the transaction, including the payload."""
+        """
+        Generates the unsigned representation of the transaction,
+        including flags and payload.
+
+        This method appends various transaction components to the buffer
+        in a specific order, ensuring correct serialization.
+        """
         encoding.append_uint8(buf, self.flags)
         encoding.append_uint8(buf, self.version)
         encoding.append_uint32(buf, self.lock_time)
@@ -90,17 +96,37 @@ class Transaction:
 
         return buf
 
-    def sign(self, private_key: PrivateKey) -> str:
-        """Make a raw transaction, sign it and return the signed bytes."""
+    def sign_bytes(self) -> bytes:
+        """
+        Generates the transaction data that needs to be signed.
+
+        The signature should be computed over this data, excluding the
+        transaction flags, which are removed before returning.
+        """
+        buf = bytearray()
+        sign_bytes = self._get_unsigned_bytes(buf)
+
+        return sign_bytes[1:]  # flags is not part of the sign bytes.
+
+    def sign(self, private_key: PrivateKey) -> bytes:
+        """
+        Generates the signed representation of the transaction,
+        including the flags, payload, and cryptographic signature.
+
+        This method first generates the data needs to be signed,
+        signs it using the provided private key, and then appends
+        both the signature and the corresponding public key to ensure
+        verifiability.
+        """
         buf = bytearray()
 
         sign_bytes = self._get_unsigned_bytes(buf)
         sig = private_key.sign(
             bytes(sign_bytes[1:]),
-        )  # flags is not part of the sign bytes.
+        )
         pub = private_key.public_key()
 
         encoding.append_fixed_bytes(buf, sig.raw_bytes())
         encoding.append_fixed_bytes(buf, pub.raw_bytes())
 
-        return buf.hex()
+        return buf
