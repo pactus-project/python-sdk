@@ -20,9 +20,9 @@ class TestTransaction(unittest.TestCase):
         tx = Transaction.create_transfer_tx(
             lock_time, sender, receiver, amount, fee, memo
         )
-        signed_data = tx.sign(prv)
 
-        expected_data = (
+        signed_data = tx.sign(prv)
+        expected_signed_data = (
             "00"  # Flags
             "01"  # Version
             "56341200"  # LockTime
@@ -36,9 +36,21 @@ class TestTransaction(unittest.TestCase):
             + "af0f74917f5065af94727ae9541b0ddcfb5b828a9e016b02498f477ed37fb44d5d882495afb6fd4f9773e4ea9deee436"  # Public Key
             + "030c4d61c6e3a1151585e1d838cae1444a438d089ce77e10c492a55f6908125c5be9b236a246e4082d08de564e111e65"
         )
-
         self.maxDiff = None
-        self.assertEqual(expected_data, signed_data)
+        self.assertEqual(expected_signed_data, signed_data.hex())
+
+        sign_bytes = tx.sign_bytes()
+        expected_sign_bytes = (
+            "01"  # Version
+            "56341200"  # LockTime
+            "c0843d"  # Fee
+            "0474657374"  # Memo
+            "01"  # PayloadType
+            + "02a195d7fecba4c636832f1db0cd0ea14db6db8c71"  # Sender
+            + "025e81869376b54f8a360f48930ea741e3b8771db2"  # Receiver
+            + "8094ebdc03"  # Amount
+        )
+        self.assertEqual(expected_sign_bytes, sign_bytes.hex())
 
 
 if __name__ == "__main__":

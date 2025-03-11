@@ -10,7 +10,7 @@ def main() -> None:
     # Creating a stub from channel
     stub = NetworkStub(channel)
 
-    # Initialize a request and call get consensus info method
+    # Initialize a request and call get node info method
     req = GetNodeInfoRequest()
     res = stub.GetNodeInfo(req)
 

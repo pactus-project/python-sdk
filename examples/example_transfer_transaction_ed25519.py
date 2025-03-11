@@ -22,7 +22,7 @@ def main() -> None:
     tx = Transaction.create_transfer_tx(lock_time, sender, receiver, amount, fee, memo)
     signed_tx = tx.sign(sec)
 
-    print(f"Signed transaction hex: {signed_tx}")
+    print(f"Signed transaction hex: {signed_tx.hex()}")
 
 
 if __name__ == "__main__":
