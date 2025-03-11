@@ -52,5 +52,6 @@ class TestTransaction(unittest.TestCase):
         )
         self.assertEqual(expected_sign_bytes, sign_bytes.hex())
 
+
 if __name__ == "__main__":
     unittest.main()

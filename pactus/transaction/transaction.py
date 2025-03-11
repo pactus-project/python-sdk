@@ -80,7 +80,7 @@ class Transaction:
 
     def _get_unsigned_bytes(self, buf: bytes) -> bytes:
         """
-        Generates the unsigned representation of the transaction,
+        Generate the unsigned representation of the transaction,
         including flags and payload.
 
         This method appends various transaction components to the buffer
@@ -98,7 +98,7 @@ class Transaction:
 
     def sign_bytes(self) -> bytes:
         """
-        Generates the transaction data that needs to be signed.
+        Generate the transaction data that needs to be signed.
 
         The signature should be computed over this data, excluding the
         transaction flags, which are removed before returning.
@@ -110,7 +110,7 @@ class Transaction:
 
     def sign(self, private_key: PrivateKey) -> bytes:
         """
-        Generates the signed representation of the transaction,
+        Generate the signed representation of the transaction,
         including the flags, payload, and cryptographic signature.
 
         This method first generates the data needs to be signed,

@@ -1,5 +1,6 @@
 from pactus.crypto.bls.signature import Signature
 
+
 def main() -> None:
     sig1 = Signature.from_string(
         "a628a8709fe00366d7150244447cc43e8637d76a20674b006b00f7a61109dab53ba5f1f66cd07219fd1e4a6bc7299d2d"
