@@ -1,5 +1,5 @@
-from pactus.rpc.blockchain_pb2_grpc import BlockchainStub
-from pactus.rpc.blockchain_pb2 import GetConsensusInfoRequest
+from pactus.rpc.network_pb2_grpc import NetworkStub
+from pactus.rpc.network_pb2 import GetNodeInfoRequest
 import grpc
 
 
@@ -8,13 +8,13 @@ def main() -> None:
     channel = grpc.insecure_channel("bootstrap1.pactus.org:50051")
 
     # Creating a stub from channel
-    stub = BlockchainStub(channel)
+    stub = NetworkStub(channel)
 
     # Initialize a request and call get consensus info method
-    req = GetConsensusInfoRequest()
-    res = stub.GetConsensusInfo(req)
+    req = GetNodeInfoRequest()
+    res = stub.GetNodeInfo(req)
 
-    print(f"Consensus info:\n{res}")
+    print(f"Node info Response:\n{res.reachability}")
 
 
 if __name__ == "__main__":
