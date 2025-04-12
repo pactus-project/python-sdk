@@ -30,7 +30,7 @@ Explore the `examples` folder for more detailed usage scenarios.
 For local development, you can install the package in editable mode, which allows you to make changes and test them immediately:
 
 ```bash
-pip install -e .
+python3 -m pip install .
 ```
 
 After making changes, it's important to ensure all tests pass by running:

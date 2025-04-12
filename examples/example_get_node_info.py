@@ -1,5 +1,5 @@
-from pactus.rpc.network_pb2_grpc import NetworkStub
-from pactus.rpc.network_pb2 import GetNodeInfoRequest
+from pactus_grpc.network_pb2_grpc import NetworkStub
+from pactus_grpc.network_pb2 import GetNodeInfoRequest
 import grpc
 
 

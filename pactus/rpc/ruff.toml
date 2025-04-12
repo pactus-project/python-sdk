@@ -1,5 +1,0 @@
-[lint]
-ignore = ["ALL"]
-
-[format]
-exclude = ["*"]
