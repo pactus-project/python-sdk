@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="pactus-sdk",
-    version="1.2.3",
+    version="1.2.4",
     author="Pactus Development Team",
     author_email="info@pactus.org",
     description="Pactus Development Kit",
@@ -25,7 +25,6 @@ setup(
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
