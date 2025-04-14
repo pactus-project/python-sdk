@@ -23,7 +23,7 @@ jobs:
 
     - name: Install locally
       run: |
-        pip install -e .
+        python3 -m pip install .
 
     - name: Run tests
       run: |
