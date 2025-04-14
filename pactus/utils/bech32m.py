@@ -1,4 +1,4 @@
-# ruff: noqa
+# ruff: noqa: ANN001, ANN201, RUF005, RUF021, FBT002, FBT003, D401
 
 # Copyright (c) 2017, 2020 Pieter Wuille
 #

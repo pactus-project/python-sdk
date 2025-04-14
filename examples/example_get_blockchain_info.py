@@ -1,5 +1,5 @@
-from pactus.rpc.blockchain_pb2_grpc import BlockchainStub
-from pactus.rpc.blockchain_pb2 import GetBlockchainInfoRequest
+from pactus_grpc.blockchain_pb2_grpc import BlockchainStub
+from pactus_grpc.blockchain_pb2 import GetBlockchainInfoRequest
 import grpc
 
 
