@@ -8,7 +8,7 @@ setup(
     author="Pactus Development Team",
     author_email="info@pactus.org",
     description="Pactus Development Kit",
-    long_description=Path.open("README.md", encoding="utf-8").read(),
+    long_description=Path("README.md").read_text(encoding="utf-8"),
     long_description_content_type="text/markdown",
     url="https://github.com/pactus-project/python-sdk",
     packages=find_packages(),
