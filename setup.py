@@ -14,7 +14,8 @@ setup(
     packages=find_packages(),
     license="MIT",
     install_requires=[
-        "pactus_grpc",
+        "pactus-grpc>=1.7.4",
+        "pactus-jsonrpc>=1.7.4",
         "ripemd-hash",
         "grpcio",
         "grpcio-tools",
