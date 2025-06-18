@@ -2,8 +2,8 @@ from pactus.amount import Amount
 from pactus.crypto.address import Address
 from pactus.crypto.private_key import PrivateKey
 from pactus.crypto.public_key import PublicKey
-from pactus.encoding import encoding
 from pactus.crypto.signature import Signature
+from pactus.encoding import encoding
 
 from ._payload import (
     BondPayload,
@@ -15,6 +15,7 @@ from ._payload import (
 
 FLAG_STRIPPED_PUBLIC_KEY = 0x01
 FLAG_NOT_SIGNED = 0x02
+
 
 class Transaction:
     def __init__(

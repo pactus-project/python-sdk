@@ -30,5 +30,6 @@ def main() -> None:
 
     print(f"Signed transaction hex: {signed_data.hex()}")
 
+
 if __name__ == "__main__":
     main()
