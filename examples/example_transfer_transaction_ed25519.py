@@ -18,9 +18,15 @@ def main() -> None:
     sec = PrivateKey.from_string(
         "TSECRET1RGLSGPYLQRVET27AZUVS9TSP8MPGF9LH4U4RKKARMCATFK9L0KUCS7DCC09"
     )
+    pub = sec.public_key()
 
     tx = Transaction.create_transfer_tx(lock_time, sender, receiver, amount, fee, memo)
     signed_tx = tx.sign(sec)
+
+    if pub.verify(bytes(tx.sign_bytes()), tx.signature):
+        print("Signature verification succeeded")
+    else:
+        print("Signature verification failed")
 
     print(f"Signed transaction hex: {signed_tx.hex()}")
 
