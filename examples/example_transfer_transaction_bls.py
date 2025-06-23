@@ -23,10 +23,9 @@ def main() -> None:
     tx = Transaction.create_transfer_tx(lock_time, sender, receiver, amount, fee, memo)
     signed_data = tx.sign(sec)
 
-    if pub.verify(bytes(tx.sign_bytes()), tx.signature):
-        print("Signature verification succeeded")
-    else:
+    if not pub.verify(bytes(tx.sign_bytes()), tx.signature):
         print("Signature verification failed")
+        exit(1)
 
     print(f"Signed transaction hex: {signed_data.hex()}")
 
