@@ -5,16 +5,16 @@ import grpc
 
 def main() -> None:
     # Creating a gRPC channel
-    channel = grpc.insecure_channel("testnet1.pactus.org:50052")
+    channel = grpc.insecure_channel("bootstrap1.pactus.org:50051")
 
     # Creating a stub from channel
     stub = BlockchainStub(channel)
 
     # Initialize a request and call get blockchain info method
     req = GetBlockchainInfoRequest()
-    blockchain_info = stub.GetBlockchainInfo(req)
+    res = stub.GetBlockchainInfo(req)
 
-    print(f"Blockchain info:\n{blockchain_info}")
+    print(f"Blockchain info:\n{res}")
 
 
 if __name__ == "__main__":

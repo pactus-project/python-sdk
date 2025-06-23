@@ -14,7 +14,7 @@ def main() -> None:
     req = GetNodeInfoRequest()
     res = stub.GetNodeInfo(req)
 
-    print(f"Node info Response:\n{res.reachability}")
+    print(f"Node info:\n{res}")
 
 
 if __name__ == "__main__":
