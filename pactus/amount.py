@@ -26,6 +26,9 @@ class Amount:
 
         return False
 
+    def __hash__(self) -> int:
+        return hash(self.value)
+
     @classmethod
     def from_nano_pac(cls, a: int) -> "Amount":
         """Store the value as NanoPAC in the Amount instance."""

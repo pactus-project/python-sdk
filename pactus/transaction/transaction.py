@@ -1,6 +1,8 @@
 from pactus.amount import Amount
 from pactus.crypto.address import Address
 from pactus.crypto.private_key import PrivateKey
+from pactus.crypto.public_key import PublicKey
+from pactus.crypto.signature import Signature
 from pactus.encoding import encoding
 
 from ._payload import (
@@ -10,6 +12,9 @@ from ._payload import (
     UnbondPayload,
     WithdrawPayload,
 )
+
+FLAG_STRIPPED_PUBLIC_KEY = 0x01
+FLAG_NOT_SIGNED = 0x02
 
 
 class Transaction:
@@ -26,6 +31,8 @@ class Transaction:
         self.version = 1
         self.fee = fee
         self.payload = payload
+        self.public_key: PublicKey = None
+        self.signature: Signature = None
 
     @classmethod
     def create_transfer_tx(
@@ -128,5 +135,9 @@ class Transaction:
 
         encoding.append_fixed_bytes(buf, sig.raw_bytes())
         encoding.append_fixed_bytes(buf, pub.raw_bytes())
+
+        self.public_key = pub
+        self.signature = sig
+        self.flags |= FLAG_NOT_SIGNED
 
         return buf
