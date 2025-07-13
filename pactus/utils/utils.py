@@ -21,7 +21,7 @@ def encode_from_base256_with_type(hrp: str, typ: str, data: bytes) -> str:
 
 def evaluate_polynomial(c: list[int], x: int, mod: int) -> int | None:
     """
-    Evaluates the polynomial f(x) = c[0] + c[1] * x + c[2] * x^2 + ... + c[n-1] * x^(n-1)
+    Evaluate the polynomial f(x) = c[0] + c[1] * x + c[2] * x^2 + ... + c[n-1] * x^(n-1).
 
     Args:
         c: List of polynomial coefficients (c[0] is the constant term)
@@ -30,6 +30,7 @@ def evaluate_polynomial(c: list[int], x: int, mod: int) -> int | None:
 
     Returns:
         The computed value f(x) if success, None otherwise
+
     """
     if not c:
         return None
@@ -38,7 +39,7 @@ def evaluate_polynomial(c: list[int], x: int, mod: int) -> int | None:
         return c[0]
 
     y = c[-1]
-    for i in range(len(c)-2, -1, -1):
+    for i in range(len(c) - 2, -1, -1):
         y = (y * x + c[i]) % mod
 
     return y
