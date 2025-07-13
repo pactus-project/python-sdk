@@ -39,12 +39,24 @@ class TestEvaluatePolynomial(unittest.TestCase):
 
     def test_wikipedia_example(self):
         # https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing
-        self.assertEqual(utils.evaluate_polynomial([1234, 166, 94], 1, 2 ** 127 - 1), 1494)
-        self.assertEqual(utils.evaluate_polynomial([1234, 166, 94], 2, 2 ** 127 - 1), 1942)
-        self.assertEqual(utils.evaluate_polynomial([1234, 166, 94], 3, 2 ** 127 - 1), 2578)
-        self.assertEqual(utils.evaluate_polynomial([1234, 166, 94], 4, 2 ** 127 - 1), 3402)
-        self.assertEqual(utils.evaluate_polynomial([1234, 166, 94], 5, 2 ** 127 - 1), 4414)
-        self.assertEqual(utils.evaluate_polynomial([1234, 166, 94], 6, 2 ** 127 - 1), 5614)
+        self.assertEqual(
+            utils.evaluate_polynomial([1234, 166, 94], 1, 2**127 - 1), 1494
+        )
+        self.assertEqual(
+            utils.evaluate_polynomial([1234, 166, 94], 2, 2**127 - 1), 1942
+        )
+        self.assertEqual(
+            utils.evaluate_polynomial([1234, 166, 94], 3, 2**127 - 1), 2578
+        )
+        self.assertEqual(
+            utils.evaluate_polynomial([1234, 166, 94], 4, 2**127 - 1), 3402
+        )
+        self.assertEqual(
+            utils.evaluate_polynomial([1234, 166, 94], 5, 2**127 - 1), 4414
+        )
+        self.assertEqual(
+            utils.evaluate_polynomial([1234, 166, 94], 6, 2**127 - 1), 5614
+        )
 
 
 if __name__ == "__main__":
