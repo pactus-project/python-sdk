@@ -1,7 +1,4 @@
 from pactus.crypto.bls.private_key import PrivateKey
-from pactus.crypto.bls.signature import Signature
-from itertools import combinations
-
 
 
 # Example of BLS threshold signature aggregation using Shamir's Secret Sharing
@@ -10,11 +7,11 @@ from itertools import combinations
 
 
 def main() -> None:
-    msg = "some message".encode()
+    # msg = "some message".encode()
     N = 3  # Number of signers
     T = 2  # Threshold for aggregation
 
-    msk = PrivateKey.random() # Master Secret Key
+    msk = PrivateKey.random()  # Master Secret Key
     mpk = msk.public_key()
 
     print(f"Master Secret Key: {msk.raw_bytes().hex()}")
@@ -24,7 +21,6 @@ def main() -> None:
 
     for i, sk in enumerate(shares):
         print(f"Private Key Share {i + 1}: {sk.raw_bytes().hex()}")
-
 
 
 if __name__ == "__main__":

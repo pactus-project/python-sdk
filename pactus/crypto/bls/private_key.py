@@ -82,10 +82,12 @@ class PrivateKey:
 
     def split(self, n: int, t: int) -> list[PrivateKey]:
         if n < t:
-            raise ValueError("n must be greater than t")
+            msg = f"n must be greater than t: n={n}, t={t}"
+            raise ValueError(msg)
 
         if n < 1:
-            raise ValueError("n must be greater than 0")
+            msg = f"n must be greater than 1: n={n}"
+            raise ValueError(msg)
 
         # Create the coefficients for the polynomial: c[0] = secret, c[1..t-1] = random private keys
         coeffs = [self.scalar]
@@ -98,8 +100,9 @@ class PrivateKey:
         for i in range(1, n + 1):
             share_scalar = utils.evaluate_polynomial(coeffs, i, curve_order)
             if share_scalar is None:
-                raise ValueError(f"Failed to evaluate polynomial at x={i}")
+                msg = f"Failed to evaluate polynomial at x={i}"
+                raise ValueError(msg)
+
             shares.append(PrivateKey(share_scalar))
 
         return shares
-
