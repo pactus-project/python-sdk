@@ -79,3 +79,30 @@ class PrivateKey:
     def sign(self, msg: bytes) -> Signature:
         point_g1 = sign(self.scalar, msg, ciphersuite=DST)
         return Signature(point_g1)
+
+    def split(self, n: int, t: int) -> list[PrivateKey]:
+        if n < t:
+            msg = f"n must be greater than t: n={n}, t={t}"
+            raise ValueError(msg)
+
+        if n < 1:
+            msg = f"n must be greater than 1: n={n}"
+            raise ValueError(msg)
+
+        # Create the coefficients for the polynomial: c[0] = secret, c[1..t-1] = random private keys
+        coeffs = [self.scalar]
+        for _ in range(1, t):
+            rand_priv = PrivateKey.random()
+            coeffs.append(rand_priv.scalar)
+
+        # Generate n shares by evaluating the polynomial at x = 1..n
+        shares = []
+        for i in range(1, n + 1):
+            share_scalar = utils.evaluate_polynomial(coeffs, i, curve_order)
+            if share_scalar is None:
+                msg = f"Failed to evaluate polynomial at x={i}"
+                raise ValueError(msg)
+
+            shares.append(PrivateKey(share_scalar))
+
+        return shares
