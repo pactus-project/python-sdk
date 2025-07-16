@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from cryptography.hazmat.primitives.asymmetric import ed25519
 
-from pactus.crypto import CryptoConfig
+from pactus.crypto.hrp import HRP
 from pactus.utils import utils
 
 from .public_key import PublicKey
@@ -29,7 +29,7 @@ class PrivateKey:
     def from_string(cls, text: str) -> PrivateKey:
         hrp, typ, data = utils.decode_to_base256_with_type(text)
 
-        if hrp != CryptoConfig.PRIVATE_KEY_HRP:
+        if hrp != HRP.PRIVATE_KEY_HRP:
             msg = f"Invalid hrp: {hrp}"
             raise ValueError(msg)
 
@@ -49,7 +49,7 @@ class PrivateKey:
 
     def string(self) -> str:
         return utils.encode_from_base256_with_type(
-            CryptoConfig.PRIVATE_KEY_HRP,
+            HRP.PRIVATE_KEY_HRP,
             SIGNATURE_TYPE_ED25519,
             self.raw_bytes(),
         )

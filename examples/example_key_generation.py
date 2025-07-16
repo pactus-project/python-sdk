@@ -1,6 +1,6 @@
 import argparse
 
-from pactus.crypto import CryptoConfig
+from pactus.crypto.hrp import HRP
 from pactus.crypto.address import AddressType
 from pactus.crypto.bls.private_key import PrivateKey as BLSPrivateKey
 from pactus.crypto.ed25519.private_key import PrivateKey as Ed25519PrivateKey
@@ -28,7 +28,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.testnet:
-        CryptoConfig.use_testnet()
+        HRP.use_testnet()
 
     match AddressType(args.address_type):
         case AddressType.VALIDATOR:
