@@ -4,8 +4,8 @@ import hashlib
 
 from ripemd.ripemd160 import ripemd160
 
-from pactus.crypto import CryptoConfig
 from pactus.crypto.address import Address, AddressType
+from pactus.crypto.hrp import HRP
 from pactus.utils import utils
 
 from .bls12_381.bls_sig_g1 import aggregate_pubs, verify
@@ -23,7 +23,7 @@ class PublicKey:
     def from_string(cls, text: str) -> PublicKey:
         hrp, typ, data = utils.decode_to_base256_with_type(text)
 
-        if hrp != CryptoConfig.PUBLIC_KEY_HRP:
+        if hrp != HRP.PUBLIC_KEY_HRP:
             msg = f"Invalid hrp: {hrp}"
             raise ValueError(msg)
 
@@ -51,7 +51,7 @@ class PublicKey:
 
     def string(self) -> str:
         return utils.encode_from_base256_with_type(
-            CryptoConfig.PUBLIC_KEY_HRP,
+            HRP.PUBLIC_KEY_HRP,
             SIGNATURE_TYPE_BLS,
             self.raw_bytes(),
         )

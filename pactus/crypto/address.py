@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 
-from pactus.crypto import CryptoConfig
+from pactus.crypto.hrp import HRP
 from pactus.utils import utils
 
 # Address format: hrp + `1` + type + data + checksum
@@ -34,7 +34,7 @@ class Address:
             return bytes([0])
 
         hrp, typ, data = utils.decode_to_base256_with_type(text)
-        if hrp != CryptoConfig.ADDRESS_HRP:
+        if hrp != HRP.ADDRESS_HRP:
             msg = f"Invalid HRP: {hrp}"
             raise ValueError(msg)
 
@@ -57,7 +57,7 @@ class Address:
             return TREASURY_ADDRESS_STRING
 
         return utils.encode_from_base256_with_type(
-            CryptoConfig.ADDRESS_HRP,
+            HRP.ADDRESS_HRP,
             self.data[0],
             self.data[1:],
         )

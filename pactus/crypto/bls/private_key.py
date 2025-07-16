@@ -3,7 +3,7 @@ from __future__ import annotations
 import secrets
 from math import ceil, log2
 
-from pactus.crypto import CryptoConfig
+from pactus.crypto.hrp import HRP
 from pactus.utils import utils
 
 from .bls12_381.bls_sig_g1 import sign
@@ -17,12 +17,12 @@ PRIVATE_KEY_SIZE = 32
 
 
 class PrivateKey:
-    def __init__(self, scalar: any) -> None:
-        self.scalar = scalar
+    def __init__(self, scalar: int) -> None:
+        self.scalar = scalar % curve_order
 
     @classmethod
     def from_bytes(cls, buffer: bytes) -> PrivateKey:
-        return cls(int.from_bytes(buffer, "big") % curve_order)
+        return cls(int.from_bytes(buffer, "big"))
 
     @classmethod
     def key_gen(cls, ikm: bytes = [], key_info: bytes = b"") -> PrivateKey:
@@ -47,7 +47,7 @@ class PrivateKey:
     def from_string(cls, text: str) -> PrivateKey:
         hrp, typ, data = utils.decode_to_base256_with_type(text)
 
-        if hrp != CryptoConfig.PRIVATE_KEY_HRP:
+        if hrp != HRP.PRIVATE_KEY_HRP:
             msg = f"Invalid hrp: {hrp}"
             raise ValueError(msg)
 
@@ -67,7 +67,7 @@ class PrivateKey:
 
     def string(self) -> str:
         return utils.encode_from_base256_with_type(
-            CryptoConfig.PRIVATE_KEY_HRP,
+            HRP.PRIVATE_KEY_HRP,
             SIGNATURE_TYPE_BLS,
             self.raw_bytes(),
         )

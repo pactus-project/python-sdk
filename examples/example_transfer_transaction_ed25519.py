@@ -1,4 +1,4 @@
-from pactus.crypto import CryptoConfig
+from pactus.crypto.hrp import HRP
 from pactus.crypto.address import Address
 from pactus.crypto.ed25519.private_key import PrivateKey
 from pactus.transaction.transaction import Transaction
@@ -6,7 +6,7 @@ from pactus.amount import Amount
 
 
 def main() -> None:
-    CryptoConfig.use_testnet()
+    HRP.use_testnet()
 
     lock_time = 1_735_096
     memo = "This is a test transaction"

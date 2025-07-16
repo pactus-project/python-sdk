@@ -1,4 +1,4 @@
-class CryptoConfig:
+class HRP:
     ADDRESS_HRP = "pc"
     PUBLIC_KEY_HRP = "public"
     PRIVATE_KEY_HRP = "secret"
