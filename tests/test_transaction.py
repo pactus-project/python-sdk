@@ -1,9 +1,9 @@
 import unittest
 
 from pactus.crypto.address import Address
-from pactus.crypto.bls.private_key import PrivateKey
-from pactus.transaction.transaction import Transaction
-from pactus.amount import Amount
+from pactus.crypto.bls import PrivateKey
+from pactus.transaction import Transaction
+from pactus.types.amount import Amount
 
 
 class TestTransaction(unittest.TestCase):

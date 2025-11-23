@@ -1,8 +1,8 @@
 import unittest
 
-from pactus.crypto.bls.private_key import PrivateKey as BLSPrivateKey
-from pactus.crypto.bls.public_key import PublicKey as BLSPublicKey
-from pactus.crypto.bls.signature import Signature as BLSSignature
+from pactus.crypto.bls import PrivateKey as BLSPrivateKey
+from pactus.crypto.bls import PublicKey as BLSPublicKey
+from pactus.crypto.bls import Signature as BLSSignature
 
 
 class TestBLSCrypto(unittest.TestCase):
