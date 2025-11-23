@@ -1,6 +1,6 @@
 import unittest
 
-from pactus.amount import NANO_PAC_PER_PAC, Amount
+from pactus.types.amount import NANO_PAC_PER_PAC, Amount
 
 
 class TestAmount(unittest.TestCase):
@@ -60,6 +60,50 @@ class TestAmount(unittest.TestCase):
             else:
                 amt = Amount.from_string(case["input"])
                 self.assertEqual(amt, case["expected"])
+
+    def test_str(self):
+        test_cases = [
+            {
+                "input": Amount(0),
+                "expected": "0.0 PAC",
+            },
+            {
+                "input": Amount.from_pac(42.5),
+                "expected": "42.5 PAC",
+            },
+            {
+                "input": Amount.from_pac(1.0),
+                "expected": "1.0 PAC",
+            },
+            {
+                "input": Amount.from_pac(0.5),
+                "expected": "0.5 PAC",
+            },
+            {
+                "input": Amount.from_pac(1000000.0),
+                "expected": "1000000.0 PAC",
+            },
+            {
+                "input": Amount.from_pac(0.000000001),
+                "expected": "1e-09 PAC",
+            },
+            {
+                "input": Amount.from_pac(-10.5),
+                "expected": "-10.5 PAC",
+            },
+            {
+                "input": Amount.from_nano_pac(1000000000),
+                "expected": "1.0 PAC",
+            },
+            {
+                "input": Amount.from_nano_pac(500000000),
+                "expected": "0.5 PAC",
+            },
+        ]
+
+        for case in test_cases:
+            result = str(case["input"])
+            self.assertEqual(result, case["expected"])
 
 
 if __name__ == "__main__":

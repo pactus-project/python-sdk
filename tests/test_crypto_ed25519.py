@@ -1,8 +1,8 @@
 import unittest
 
-from pactus.crypto.ed25519.private_key import PrivateKey as Ed25519PrivateKey
-from pactus.crypto.ed25519.public_key import PublicKey as Ed25519PublicKey
-from pactus.crypto.ed25519.signature import Signature as Ed25519Signature
+from pactus.crypto.ed25519 import PrivateKey as Ed25519PrivateKey
+from pactus.crypto.ed25519 import PublicKey as Ed25519PublicKey
+from pactus.crypto.ed25519 import Signature as Ed25519Signature
 
 
 class TestEd25519Crypto(unittest.TestCase):

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 
-from pactus.amount import Amount
+from pactus.types.amount import Amount
 from pactus.crypto.address import Address
 from pactus.encoding import encoding
 

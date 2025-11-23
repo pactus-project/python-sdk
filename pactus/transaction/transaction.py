@@ -1,4 +1,4 @@
-from pactus.amount import Amount
+from pactus.types.amount import Amount
 from pactus.crypto.address import Address
 from pactus.crypto.private_key import PrivateKey
 from pactus.crypto.public_key import PublicKey

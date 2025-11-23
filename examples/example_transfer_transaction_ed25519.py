@@ -1,8 +1,8 @@
-from pactus.crypto.hrp import HRP
-from pactus.crypto.address import Address
-from pactus.crypto.ed25519.private_key import PrivateKey
-from pactus.transaction.transaction import Transaction
-from pactus.amount import Amount
+from pactus.crypto import HRP
+from pactus.crypto import Address
+from pactus.crypto.ed25519 import PrivateKey
+from pactus.transaction import Transaction
+from pactus.types.amount import Amount
 
 
 def main() -> None:

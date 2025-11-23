@@ -1,6 +1,6 @@
-from pactus.crypto.bls.private_key import PrivateKey
-from pactus.crypto.bls.public_key import PublicKey
-from pactus.crypto.bls.signature import Signature
+from pactus.crypto.bls import PrivateKey
+from pactus.crypto.bls import PublicKey
+from pactus.crypto.bls import Signature
 
 
 def main() -> None:

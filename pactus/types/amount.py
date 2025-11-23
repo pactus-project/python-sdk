@@ -29,6 +29,11 @@ class Amount:
     def __hash__(self) -> int:
         return hash(self.value)
 
+    def __str__(self) -> str:
+        """Return a string representation of the amount in PAC."""
+        pac_value = self.value / NANO_PAC_PER_PAC
+        return f"{pac_value} PAC"
+
     @classmethod
     def from_nano_pac(cls, a: int) -> "Amount":
         """Store the value as NanoPAC in the Amount instance."""
@@ -76,3 +81,4 @@ class Amount:
             return self - 0.5
 
         return self + 0.5
+
