@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 
-from pactus.types.amount import Amount
 from pactus.crypto.address import Address
 from pactus.encoding import encoding
+from pactus.types.amount import Amount
 
 
 class PayloadType(Enum):

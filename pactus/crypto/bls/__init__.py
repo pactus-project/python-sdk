@@ -1,6 +1,6 @@
 from .private_key import PrivateKey
 from .public_key import PublicKey
-from .signature import Signature, SIGNATURE_TYPE_BLS, DST
+from .signature import DST, SIGNATURE_TYPE_BLS, Signature
 
-__all__ = ["PrivateKey", "PublicKey", "Signature", "SIGNATURE_TYPE_BLS", "DST"]
+__all__ = ["DST", "SIGNATURE_TYPE_BLS", "PrivateKey", "PublicKey", "Signature"]
 
