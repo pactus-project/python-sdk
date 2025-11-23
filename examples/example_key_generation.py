@@ -1,12 +1,8 @@
 import argparse
 
-from pactus.crypto.hrp import HRP
-from pactus.crypto.address import AddressType
+from pactus.crypto import Address, AddressType, HRP, PrivateKey, PublicKey
 from pactus.crypto.bls import PrivateKey as BLSPrivateKey
 from pactus.crypto.ed25519 import PrivateKey as Ed25519PrivateKey
-from pactus.crypto import PrivateKey
-from pactus.crypto import PublicKey
-from pactus.crypto.address import Address
 
 
 def main() -> None:
