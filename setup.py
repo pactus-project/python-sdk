@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="pactus-sdk",
-    version="1.3.0",
+    version="1.4.0",
     author="Pactus Development Team",
     author_email="info@pactus.org",
     description="Pactus Development Kit",
