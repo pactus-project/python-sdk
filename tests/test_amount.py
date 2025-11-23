@@ -65,39 +65,39 @@ class TestAmount(unittest.TestCase):
         test_cases = [
             {
                 "input": Amount(0),
-                "expected": "0.0 PAC",
+                "expected": "0.0",
             },
             {
                 "input": Amount.from_pac(42.5),
-                "expected": "42.5 PAC",
+                "expected": "42.5",
             },
             {
                 "input": Amount.from_pac(1.0),
-                "expected": "1.0 PAC",
+                "expected": "1.0",
             },
             {
                 "input": Amount.from_pac(0.5),
-                "expected": "0.5 PAC",
+                "expected": "0.5",
             },
             {
                 "input": Amount.from_pac(1000000.0),
-                "expected": "1000000.0 PAC",
+                "expected": "1000000.0",
             },
             {
                 "input": Amount.from_pac(0.000000001),
-                "expected": "1e-09 PAC",
+                "expected": "1e-09",
             },
             {
                 "input": Amount.from_pac(-10.5),
-                "expected": "-10.5 PAC",
+                "expected": "-10.5",
             },
             {
                 "input": Amount.from_nano_pac(1000000000),
-                "expected": "1.0 PAC",
+                "expected": "1.0",
             },
             {
                 "input": Amount.from_nano_pac(500000000),
-                "expected": "0.5 PAC",
+                "expected": "0.5",
             },
         ]
 

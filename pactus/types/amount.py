@@ -32,7 +32,7 @@ class Amount:
     def __str__(self) -> str:
         """Return a string representation of the amount in PAC."""
         pac_value = self.value / NANO_PAC_PER_PAC
-        return f"{pac_value} PAC"
+        return f"{pac_value}"
 
     @classmethod
     def from_nano_pac(cls, a: int) -> "Amount":
