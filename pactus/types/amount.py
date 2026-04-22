@@ -34,6 +34,14 @@ class Amount:
         pac_value = self.value / NANO_PAC_PER_PAC
         return f"{pac_value}"
 
+    def to_pac(self) -> float:
+        """Convert the amount from NanoPAC to PAC and return as float."""
+        return self.value / NANO_PAC_PER_PAC
+
+    def to_nano_pac(self) -> int:
+        """Return the amount in NanoPAC as an integer."""
+        return self.value
+
     @classmethod
     def from_nano_pac(cls, a: int) -> "Amount":
         """Store the value as NanoPAC in the Amount instance."""
