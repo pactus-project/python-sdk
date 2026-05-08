@@ -6,6 +6,7 @@ http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0.
 
 See the bottom few lines for usage. Tested on Python 2 and 3.
 """
+
 from __future__ import annotations
 
 import functools
@@ -98,7 +99,6 @@ def make_random_shares(secret: int, minimum: int, shares: int, prime: int) -> li
         raise ValueError(msg)
     poly = [secret] + [_RINT(prime - 1) for i in range(minimum - 1)]
     return [(i, _eval_at(poly, i, prime)) for i in range(1, shares + 1)]
-
 
 
 def recover_secret(shares: list[tuple[int, int]], prime: int) -> int:

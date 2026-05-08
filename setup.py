@@ -20,6 +20,7 @@ setup(
         "grpcio",
         "grpcio-tools",
         "cryptography>=43.0",
+        "secp256k1",
         "zmq",
     ],
     keywords=["pactus", "blockchain", "sdk", "web3", "dapp", "bls", "bech32"],
