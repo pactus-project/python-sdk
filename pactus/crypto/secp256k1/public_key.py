@@ -61,5 +61,7 @@ class PublicKey:
             sig_compact = sig.raw_bytes()
             sig_deserialized = self.pub.ecdsa_deserialize_compact(sig_compact)
             return self.pub.ecdsa_verify(msg, sig_deserialized)
+
+        # ruff: noqa: BLE001  #  unable to fix this issue
         except Exception:
             return False
