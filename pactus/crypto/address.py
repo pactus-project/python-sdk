@@ -40,7 +40,12 @@ class Address:
             raise ValueError(msg)
 
         typ = AddressType(typ)
-        if typ in (AddressType.VALIDATOR, AddressType.BLS_ACCOUNT, AddressType.ED25519_ACCOUNT):
+        if typ in (
+            AddressType.VALIDATOR,
+            AddressType.BLS_ACCOUNT,
+            AddressType.ED25519_ACCOUNT,
+            AddressType.SECP256K1_ACCOUNT,
+        ):
             if len(data) != 20:
                 msg = f"Invalid length: {len(data) + 1}"
                 raise ValueError(msg)

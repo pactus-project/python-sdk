@@ -3,44 +3,76 @@ import unittest
 from pactus.crypto.bls import PrivateKey as BLSPrivateKey
 from pactus.crypto.bls import PublicKey as BLSPublicKey
 from pactus.crypto.bls import Signature as BLSSignature
+from pactus.crypto import Address
 
 
 class TestBLSCrypto(unittest.TestCase):
-    def test_private_key_to_public_key(self):
-        prv_str = "SECRET1PDRWTLP5PX0FAHDX39GXZJP7FKZFALML0D5U9TT9KVQHDUC99CMGQQJVK67"
-        expected_pub_str = "public1p4u8hfytl2pj6l9rj0t54gxcdmna4hq52ncqkkqjf3arha5mlk3x4mzpyjkhmdl20jae7f65aamjrvqcvf4sudcapz52ctcwc8r9wz3z2gwxs38880cgvfy49ta5ssyjut05myd4zgmjqstggmetyuyg7v5jhx47a"
+    def test_encoding(self):
+        prv_data = "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+        pub_data = "a7290fc800d2d14f2dc5e5cb416bebf3267dfed1c6c3a79c6edc4ebd1e657d956daa06a2fcaafd42c94b65b32d4d43ea1368f861006829c475b7d54763a502dfd717e9d51c5cc7deae2981e56090a821c9c5bcafc129b8599203ab99031f4ce7"
+        val_addr_data = "01c40b914373d4fc9c1e4611ad0acd5f23abf58a0d"
+        acc_addr_data = "02c40b914373d4fc9c1e4611ad0acd5f23abf58a0d"
+
+        prv_str = "SECRET1PQQQSYQCYQ5RQWZQFPG9SCRGWPUGPZYSNZS23V9CCRYDPK8QARC0SEZYD4L"
+        pub_str = "public1p5u5sljqq6tg57tw9uh95z6lt7vn8mlk3cmp608rwm38t68n90k2km2sx5t724l2ze99ktvedf4p75ymglpssq6pfc36m0428vwjs9h7hzl5a28zucl02u2vpu4sfp2ppe8zmet7p9xu9nysr4wvsx86vuujrva2z"
+        val_addr_str = "pc1pcs9ezsmn6n7fc8jxzxks4n2lyw4ltzsdc9v8qn"
+        acc_addr_str = "pc1zcs9ezsmn6n7fc8jxzxks4n2lyw4ltzsd9wu6hw"
 
         prv = BLSPrivateKey.from_string(prv_str)
-        pub = prv.public_key()
-        pub_str = pub.string()
-
-        self.assertEqual(pub_str, expected_pub_str)
-
-    def test_public_key_to_address(self):
-        pub_str = "public1p4u8hfytl2pj6l9rj0t54gxcdmna4hq52ncqkkqjf3arha5mlk3x4mzpyjkhmdl20jae7f65aamjrvqcvf4sudcapz52ctcwc8r9wz3z2gwxs38880cgvfy49ta5ssyjut05myd4zgmjqstggmetyuyg7v5jhx47a"
-        expected_acc_addr_str = "pc1z5x2a0lkt5nrrdqe0rkcv6r4pfkmdhrr3mawvua"
-        expected_val_addr_str = "pc1p5x2a0lkt5nrrdqe0rkcv6r4pfkmdhrr3xk73tq"
-
         pub = BLSPublicKey.from_string(pub_str)
-        acc_add_str = pub.account_address().string()
-        val_add_str = pub.validator_address().string()
+        val_addr = Address.from_string(val_addr_str)
+        acc_addr = Address.from_string(acc_addr_str)
 
-        self.assertEqual(acc_add_str, expected_acc_addr_str)
-        self.assertEqual(val_add_str, expected_val_addr_str)
+        self.assertEqual(prv_data, prv.raw_bytes().hex())
+        self.assertEqual(pub_data, pub.raw_bytes().hex())
+        self.assertEqual(val_addr_data, val_addr.raw_bytes().hex())
+        self.assertEqual(acc_addr_data, acc_addr.raw_bytes().hex())
 
-    def test_sign(self):
-        prv_str = "SECRET1PDRWTLP5PX0FAHDX39GXZJP7FKZFALML0D5U9TT9KVQHDUC99CMGQQJVK67"
-        prv = BLSPrivateKey.from_string(prv_str)
-        prv.public_key()
         msg = b"pactus"
-        prv.sign(msg)
-        BLSSignature.from_string(
-            "923d67a8624cbb7972b29328e15ec76cc846076ccf00a9e94d991c677846f334ae4ba4551396fbcd6d1cab7593baf3b7"
+        sig = BLSSignature.from_string(
+            "8bdda74336efdf43b428a3811d3d6867a19e20889c91261b02a6b950b130f5bb22621394667c27660bfed2a8719d9c52"
         )
 
-        # self.assertEqual(sig.string(), expected_sig.string())
-        # self.assertTrue(pub.verify(msg, sig))
-        # self.assertFalse(pub.verify(b"foo", sig))
+        self.assertTrue(pub.verify(msg, sig))
+        self.assertEqual(sig.raw_bytes(), prv.sign(msg).raw_bytes())
+        self.assertEqual(pub.raw_bytes(), prv.public_key().raw_bytes())
+        self.assertEqual(val_addr.raw_bytes(), pub.validator_address().raw_bytes())
+        self.assertEqual(acc_addr.raw_bytes(), pub.account_address().raw_bytes())
+
+    def test_sign_and_verify(self):
+        prv1 = BLSPrivateKey.random()
+        prv2 = BLSPrivateKey.random()
+        pub1 = prv1.public_key()
+        pub2 = prv2.public_key()
+
+        msg = b"pactus"
+        sig1 = prv1.sign(msg)
+        sig2 = prv2.sign(msg)
+
+        self.assertTrue(pub1.verify(msg, sig1))
+        self.assertTrue(pub2.verify(msg, sig2))
+        self.assertFalse(pub1.verify(msg, sig2))
+        self.assertFalse(pub2.verify(msg, sig1))
+
+        # Verify a signature for a different message is rejected
+        different_msg = b"different"
+        sig3 = prv1.sign(different_msg)
+        self.assertFalse(pub1.verify(msg, sig3))
+
+    def test_multiple_signatures(self):
+        # Test that multiple signatures for the same message and key are deterministic
+        prv = BLSPrivateKey.random()
+        pub = prv.public_key()
+
+        msg = b"pactus"
+        sig1 = prv.sign(msg)
+        sig2 = prv.sign(msg)
+
+        # Both signatures should verify
+        self.assertTrue(pub.verify(msg, sig1))
+        self.assertTrue(pub.verify(msg, sig2))
+
+        self.assertEqual(sig1.raw_bytes(), sig2.raw_bytes())
 
     def test_key_gen(self):
         tests = [

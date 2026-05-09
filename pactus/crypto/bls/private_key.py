@@ -21,8 +21,8 @@ class PrivateKey:
         self.scalar = scalar % curve_order
 
     @classmethod
-    def from_bytes(cls, buffer: bytes) -> PrivateKey:
-        return cls(int.from_bytes(buffer, "big"))
+    def from_bytes(cls, data: bytes) -> PrivateKey:
+        return cls(int.from_bytes(data, "big"))
 
     @classmethod
     def key_gen(cls, ikm: bytes = [], key_info: bytes = b"") -> PrivateKey:
@@ -59,8 +59,7 @@ class PrivateKey:
             msg = "Private key data must be 32 bytes long"
             raise ValueError(msg)
 
-        scalar = int.from_bytes(data, "big")
-        return cls(scalar)
+        return cls.from_bytes(data)
 
     def raw_bytes(self) -> bytes:
         return self.scalar.to_bytes(PRIVATE_KEY_SIZE, "big")
