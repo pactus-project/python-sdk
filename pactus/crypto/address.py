@@ -16,6 +16,7 @@ class AddressType(Enum):
     VALIDATOR = 1
     BLS_ACCOUNT = 2
     ED25519_ACCOUNT = 3
+    SECP256K1_ACCOUNT = 4
 
 
 class Address:
