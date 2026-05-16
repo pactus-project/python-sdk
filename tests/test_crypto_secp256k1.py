@@ -3,52 +3,56 @@ import unittest
 from pactus.crypto.secp256k1 import PrivateKey as Secp256k1PrivateKey
 from pactus.crypto.secp256k1 import PublicKey as Secp256k1PublicKey
 from pactus.crypto.secp256k1 import Signature as Secp256k1Signature
+from pactus.crypto import Address
 
 
 class TestSecp256k1Crypto(unittest.TestCase):
-    def test_private_key_to_public_key(self):
-        prv_str = "secret1yqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqsd25y3e"
-        expected_pub_str = (
-            "public1yqvdcf32k0vfxgsyet5ldt246q4jaw8scx3sysx0lnstlt6w4m5rc7k3ysjp"
+    def test_encoding(self):
+        prv_data = "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+        pub_data = "036d6caac248af96f6afa7f904f550253a0f3ef3f5aa2fe6838a95b216691468e2"
+        addr_data = "042bc1db7e0797c45b918dc401093c9257c6012b4c"
+
+        prv_str = "SECRET1YQQQSYQCYQ5RQWZQFPG9SCRGWPUGPZYSNZS23V9CCRYDPK8QARC0SPVXU8Z"
+        pub_str = "public1yqdkke2kzfzheda405lusfa2sy5aq70hn7k4zle5r322my9nfz35wyfamrfs"
+        addr_str = "pc1y90qakls8jlz9hyvdcsqsj0yj2lrqz26vqu7l0z"
+
+        prv = Secp256k1PrivateKey.from_string(prv_str)
+        pub = Secp256k1PublicKey.from_string(pub_str)
+        addr = Address.from_string(addr_str)
+
+        self.assertEqual(prv_data, prv.raw_bytes().hex())
+        self.assertEqual(pub_data, pub.raw_bytes().hex())
+        self.assertEqual(addr_data, addr.raw_bytes().hex())
+
+        msg = b"pactus"
+        sig = Secp256k1Signature.from_string(
+            "16e6f8bcdb92964a35773aae200628a5b470b6488d42ceef6538da0b4ffd3b42098dd821eea96f66ba02c9c4473443ab51c411ab78adfbb90d53b07ca1d6862b"
         )
 
-        prv = Secp256k1PrivateKey.from_string(prv_str)
-        pub = prv.public_key()
-        pub_str = pub.string()
-
-        self.assertEqual(pub_str, expected_pub_str)
-
-    def test_public_key_to_address(self):
-        pub_str = "public1yqvdcf32k0vfxgsyet5ldt246q4jaw8scx3sysx0lnstlt6w4m5rc7k3ysjp"
-        expected_acc_addr_str = "pc1yj7ag28h54jf4e09nnednjhgmg60srnvj7uu39v"
-
-        pub = Secp256k1PublicKey.from_string(pub_str)
-        acc_add_str = pub.account_address().string()
-
-        self.assertEqual(acc_add_str, expected_acc_addr_str)
+        self.assertTrue(pub.verify(msg, sig))
+        self.assertEqual(sig.raw_bytes(), prv.sign(msg).raw_bytes())
+        self.assertEqual(pub.raw_bytes(), prv.public_key().raw_bytes())
+        self.assertEqual(addr.raw_bytes(), pub.account_address().raw_bytes())
 
     def test_sign_and_verify(self):
-        prv_str = "secret1yqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqsd25y3e"
-        prv = Secp256k1PrivateKey.from_string(prv_str)
-        pub = prv.public_key()
+        prv1 = Secp256k1PrivateKey.random()
+        prv2 = Secp256k1PrivateKey.random()
+        pub1 = prv1.public_key()
+        pub2 = prv2.public_key()
+
         msg = b"pactus"
-        sig = prv.sign(msg)
+        sig1 = prv1.sign(msg)
+        sig2 = prv2.sign(msg)
 
-        # Verify the signature is correct length (64 bytes)
-        self.assertEqual(len(sig.raw_bytes()), 64)
-
-        # Verify the signature verifies correctly
-        self.assertTrue(pub.verify(msg, sig))
-
-        # Verify an invalid signature is rejected
-        invalid_sig_bytes = b"\x00" * 64
-        invalid_sig = Secp256k1Signature.from_string(invalid_sig_bytes.hex())
-        self.assertFalse(pub.verify(msg, invalid_sig))
+        self.assertTrue(pub1.verify(msg, sig1))
+        self.assertTrue(pub2.verify(msg, sig2))
+        self.assertFalse(pub1.verify(msg, sig2))
+        self.assertFalse(pub2.verify(msg, sig1))
 
         # Verify a signature for a different message is rejected
         different_msg = b"different"
-        sig2 = prv.sign(different_msg)
-        self.assertFalse(pub.verify(msg, sig2))
+        sig3 = prv1.sign(different_msg)
+        self.assertFalse(pub1.verify(msg, sig3))
 
     def test_key_generation(self):
         # Test random key generation

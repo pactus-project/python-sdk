@@ -20,6 +20,12 @@ class PublicKey:
         self.point_g2 = point_g2
 
     @classmethod
+    def from_bytes(cls, data: str) -> PublicKey:
+        point_g2 = deserialize(bytes(data), is_ell2=True)
+
+        return cls(point_g2)
+
+    @classmethod
     def from_string(cls, text: str) -> PublicKey:
         hrp, typ, data = utils.decode_to_base256_with_type(text)
 
@@ -35,9 +41,7 @@ class PublicKey:
             msg = "Public key data must be 96 bytes long"
             raise ValueError(msg)
 
-        point_g2 = deserialize(bytes(data), is_ell2=True)
-
-        return cls(point_g2)
+        return cls.from_bytes(data)
 
     @classmethod
     def aggregate(cls, pubs: list[PublicKey]) -> PublicKey:
