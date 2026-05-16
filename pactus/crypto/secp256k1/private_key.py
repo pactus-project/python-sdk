@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import secp256k1
+import hashlib
 
 from pactus.crypto.hrp import HRP
 from pactus.utils import utils
+from functools import partial
 
 from .public_key import PublicKey
 from .signature import SIGNATURE_TYPE_SECP256K1, Signature
@@ -62,6 +64,7 @@ class PrivateKey:
         return PublicKey(self.scalar.pubkey)
 
     def sign(self, msg: bytes) -> Signature:
-        sig = self.scalar.ecdsa_sign(msg)
+        digest = partial(hashlib.blake2b, digest_size=32)
+        sig = self.scalar.ecdsa_sign(msg, digest=digest)
         sig_compact = self.scalar.ecdsa_serialize_compact(sig)
         return Signature(sig_compact)

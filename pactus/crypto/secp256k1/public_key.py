@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import hashlib
-
 import secp256k1
 from ripemd.ripemd160 import ripemd160
+from functools import partial
 
 from pactus.crypto.address import Address, AddressType
 from pactus.crypto.hrp import HRP
@@ -58,9 +58,10 @@ class PublicKey:
 
     def verify(self, msg: bytes, sig: Signature) -> bool:
         try:
+            digest = partial(hashlib.blake2b, digest_size=32)
             sig_compact = sig.raw_bytes()
             sig_deserialized = self.pub.ecdsa_deserialize_compact(sig_compact)
-            return self.pub.ecdsa_verify(msg, sig_deserialized)
+            return self.pub.ecdsa_verify(msg, sig_deserialized, digest=digest)
 
         # ruff: noqa: BLE001  #  unable to fix this issue
         except Exception:
