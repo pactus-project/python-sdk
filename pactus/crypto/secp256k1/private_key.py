@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-import secp256k1
 import hashlib
+from functools import partial
+
+import secp256k1
 
 from pactus.crypto.hrp import HRP
 from pactus.utils import utils
-from functools import partial
 
 from .public_key import PublicKey
 from .signature import SIGNATURE_TYPE_SECP256K1, Signature

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import hashlib
+from functools import partial
+
 import secp256k1
 from ripemd.ripemd160 import ripemd160
-from functools import partial
 
 from pactus.crypto.address import Address, AddressType
 from pactus.crypto.hrp import HRP
