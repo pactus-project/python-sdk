@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import hashlib
+from functools import partial
+
 import secp256k1
 
 from pactus.crypto.hrp import HRP
@@ -62,6 +65,7 @@ class PrivateKey:
         return PublicKey(self.scalar.pubkey)
 
     def sign(self, msg: bytes) -> Signature:
-        sig = self.scalar.ecdsa_sign(msg)
+        digest = partial(hashlib.blake2b, digest_size=32)
+        sig = self.scalar.ecdsa_sign(msg, digest=digest)
         sig_compact = self.scalar.ecdsa_serialize_compact(sig)
         return Signature(sig_compact)
