@@ -6,8 +6,8 @@ class Height:
     It can be used for transaction lock times.
     """
 
-    def __init__(self, height: int = 0) -> None:
-        self.value = height
+    def __init__(self, value: int = 0) -> None:
+        self.value = value
 
     def __eq__(self, other: "Height") -> bool:
         if isinstance(other, Height):

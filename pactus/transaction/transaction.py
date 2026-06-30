@@ -95,7 +95,7 @@ class Transaction:
         """
         encoding.append_uint8(buf, self.flags)
         encoding.append_uint8(buf, self.version)
-        encoding.append_uint32(buf, self.lock_time)
+        encoding.append_uint32(buf, self.lock_time.value)
         encoding.append_var_int(buf, self.fee.value)
         encoding.append_str(buf, self.memo)
         encoding.append_uint8(buf, self.payload.get_type().value)

@@ -5,8 +5,8 @@ class Round:
     It encapsulates a raw integer value representing a round number.
     """
 
-    def __init__(self, round: int = 0) -> None:
-        self.value = round
+    def __init__(self, value: int = 0) -> None:
+        self.value = value
 
     def __eq__(self, other: "Round") -> bool:
         if isinstance(other, Round):
