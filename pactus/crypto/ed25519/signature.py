@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pactus.encoding import encoding
+
 SIGNATURE_SIZE = 64
 SIGNATURE_TYPE_ED25519 = 3
 
@@ -23,3 +25,11 @@ class Signature:
 
     def string(self) -> str:
         return self.sig.hex()
+
+    def encode(self) -> bytes:
+        return encoding.append_fixed_bytes(b"", self.sig)
+
+    @classmethod
+    def decode(cls, buf: bytes) -> tuple:
+        data, buf = encoding.read_fixed_bytes(buf, SIGNATURE_SIZE)
+        return cls(data), buf

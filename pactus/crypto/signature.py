@@ -16,3 +16,12 @@ class Signature(ABC):
     @abstractmethod
     def string(self) -> str:
         pass
+
+    @abstractmethod
+    def encode(self) -> bytes:
+        pass
+
+    @classmethod
+    @abstractmethod
+    def decode(cls, buf: bytes) -> tuple:
+        pass

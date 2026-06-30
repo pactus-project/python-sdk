@@ -8,6 +8,7 @@ from ripemd.ripemd160 import ripemd160
 
 from pactus.crypto.address import Address, AddressType
 from pactus.crypto.hrp import HRP
+from pactus.encoding import encoding
 from pactus.utils import utils
 
 from .signature import SIGNATURE_TYPE_SECP256K1, Signature
@@ -48,6 +49,14 @@ class PublicKey:
             SIGNATURE_TYPE_SECP256K1,
             self.raw_bytes(),
         )
+
+    def encode(self) -> bytes:
+        return encoding.append_fixed_bytes(b"", self.raw_bytes())
+
+    @classmethod
+    def decode(cls, buf: bytes) -> tuple:
+        data, buf = encoding.read_fixed_bytes(buf, PUBLIC_KEY_SIZE)
+        return cls(secp256k1.PublicKey(data, raw=True)), buf
 
     def account_address(self) -> Address:
         blake2b = hashlib.blake2b(digest_size=32)

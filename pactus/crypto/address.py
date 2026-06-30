@@ -3,6 +3,7 @@ from __future__ import annotations
 from enum import Enum
 
 from pactus.crypto.hrp import HRP
+from pactus.encoding import encoding
 from pactus.utils import utils
 
 # Address format: hrp + `1` + type + data + checksum
@@ -22,7 +23,7 @@ class AddressType(Enum):
 class Address:
     def __init__(self, address_type: AddressType, data: bytes) -> None:
         if len(data) != ADDRESS_SIZE - 1:
-            msg = "Data must be 21 bytes long"
+            msg = "Data must be 20 bytes long"
             raise ValueError(msg)
 
         self.data = bytearray()
@@ -32,7 +33,7 @@ class Address:
     @classmethod
     def from_string(cls, text: str) -> Address:
         if text == TREASURY_ADDRESS_STRING:
-            return bytes([0])
+            return cls(AddressType.TREASURY, bytes(20))
 
         hrp, typ, data = utils.decode_to_base256_with_type(text)
         if hrp != HRP.ADDRESS_HRP:
@@ -59,7 +60,7 @@ class Address:
         return bytes(self.data)
 
     def string(self) -> str:
-        if self.data == bytes([0]):
+        if self.is_treasury_address():
             return TREASURY_ADDRESS_STRING
 
         return utils.encode_from_base256_with_type(
@@ -76,7 +77,30 @@ class Address:
 
     def is_account_address(self) -> bool:
         t = self.address_type()
-        return t in (AddressType.TREASURY, AddressType.BLS_ACCOUNT, AddressType.ED25519_ACCOUNT)
+        return t in (
+            AddressType.TREASURY,
+            AddressType.BLS_ACCOUNT,
+            AddressType.ED25519_ACCOUNT,
+        )
 
     def is_validator_address(self) -> bool:
         return self.address_type() == AddressType.VALIDATOR
+
+    def encode(self) -> bytes:
+        buf = b""
+        if self.is_treasury_address():
+            return encoding.append_uint8(buf, AddressType.TREASURY.value)
+        return encoding.append_fixed_bytes(buf, self.raw_bytes())
+
+    @classmethod
+    def decode(cls, buf: bytes) -> tuple:
+        """
+        Decode an Address from bytes.
+        Returns (Address, remaining_buf).
+        """
+        addr_type, buf = encoding.read_uint8(buf)
+        if addr_type == AddressType.TREASURY.value:
+            return cls(AddressType.TREASURY, bytes(20)), buf
+
+        data, buf = encoding.read_fixed_bytes(buf, 20)
+        return cls(AddressType(addr_type), data), buf
