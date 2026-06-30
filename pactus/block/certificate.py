@@ -47,9 +47,8 @@ class Certificate:
         cert = cls(height, round_, committers, absentees, signature)
         return cert, buf
 
-    def hash(self) -> bytes:
-        """Return the certificate hash (blake2b-256 of encoded bytes)."""
-        buf = self.height.encode(b"")
+    def encode(self, buf: bytes) -> bytes:
+        buf = self.height.encode(buf)
         buf = self.round.encode(buf)
         buf = encoding.append_var_int(buf, len(self.committers))
         for n in self.committers:
@@ -57,5 +56,8 @@ class Certificate:
         buf = encoding.append_var_int(buf, len(self.absentees))
         for n in self.absentees:
             buf = encoding.append_var_int(buf, n)
-        buf = self.signature.encode(buf)
-        return hashlib.blake2b(buf, digest_size=32).digest()
+        return self.signature.encode(buf)
+
+    def hash(self) -> bytes:
+        """Return the certificate hash (blake2b-256 of encoded bytes)."""
+        return hashlib.blake2b(self.encode(b""), digest_size=32).digest()
