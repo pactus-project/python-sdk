@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pactus.crypto.address import Address, AddressType
 from pactus.crypto.bls.public_key import PublicKey as BLSPublicKey
 from pactus.crypto.bls.signature import Signature as BLSSignature
@@ -124,7 +126,7 @@ class Transaction:
         amount: Amount,
         fee: Amount,
         memo: str = "",
-    ) -> "Transaction":
+    ) -> Transaction:
         payload = TransferPayload(sender, receiver, amount)
         return cls(lock_time, fee, memo, payload)
 
@@ -134,11 +136,11 @@ class Transaction:
         lock_time: Height,
         sender: Address,
         receiver: Address,
-        public_key: bytes,
+        public_key: BLSPublicKey | None,
         fee: Amount,
         stake: Amount,
         memo: str = "",
-    ) -> "Transaction":
+    ) -> Transaction:
         payload = BondPayload(sender, receiver, public_key, stake)
         return cls(lock_time, fee, memo, payload)
 
@@ -148,7 +150,7 @@ class Transaction:
         lock_time: Height,
         validator: Address,
         memo: str = "",
-    ) -> "Transaction":
+    ) -> Transaction:
         payload = UnbondPayload(validator)
         return cls(lock_time, 0, memo, payload)
 
@@ -161,7 +163,7 @@ class Transaction:
         amount: Amount,
         fee: Amount,
         memo: str = "",
-    ) -> "Transaction":
+    ) -> Transaction:
         payload = WithdrawPayload(from_addr, to_addr, amount)
         return cls(lock_time, fee, memo, payload)
 

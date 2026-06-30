@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from pactus.crypto.address import Address
+from pactus.crypto.bls.public_key import PublicKey as BLSPublicKey
 from pactus.encoding import encoding
 from pactus.types.amount import Amount
 
@@ -10,7 +13,7 @@ class BondPayload:
         self,
         sender: Address,
         receiver: Address,
-        public_key: bytes,
+        public_key: BLSPublicKey | None,
         stake: Amount,
     ) -> None:
         self.sender = sender
@@ -21,7 +24,11 @@ class BondPayload:
     def encode(self, buf: bytes) -> bytes:
         buf = self.sender.encode(buf)
         buf = self.receiver.encode(buf)
-        buf = encoding.append_fixed_bytes(buf, self.public_key)
+        if self.public_key is not None:
+            buf = encoding.append_var_int(buf, 96)
+            buf = self.public_key.encode(buf)
+        else:
+            buf = encoding.append_var_int(buf, 0)
         return self.stake.encode(buf)
 
     def get_type(self) -> PayloadType:
@@ -38,7 +45,7 @@ class BondPayload:
         pub_key_size, buf = encoding.read_var_int(buf)
         public_key = None
         if pub_key_size == 96:
-            public_key, buf = encoding.read_fixed_bytes(buf, 96)
+            public_key, buf = BLSPublicKey.decode(buf)
         elif pub_key_size != 0:
             msg = f"invalid public key size: {pub_key_size}"
             raise ValueError(msg)
