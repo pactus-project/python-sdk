@@ -4,6 +4,7 @@ from pactus.crypto.address import Address
 from pactus.crypto.bls import PrivateKey
 from pactus.transaction import Transaction
 from pactus.types.amount import Amount
+from pactus.types.height import Height
 
 
 class TestTransaction(unittest.TestCase):
@@ -14,7 +15,7 @@ class TestTransaction(unittest.TestCase):
         receiver = Address.from_string("pc1zt6qcdymkk48c5ds0fzfsaf6puwu8w8djn3ffpn")
         amount = Amount.from_pac(1.0)  # 1 PAC
         fee = Amount.from_pac(0.001)  # 0.001 PAC
-        lock_time = 0x123456
+        lock_time = Height(0x123456)
         memo = "test"
 
         tx = Transaction.create_transfer_tx(
