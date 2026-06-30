@@ -3,12 +3,13 @@ from pactus.crypto import Address
 from pactus.crypto.ed25519 import PrivateKey
 from pactus.transaction import Transaction
 from pactus.types.amount import Amount
+from pactus.types.height import Height
 
 
 def main() -> None:
     HRP.use_testnet()
 
-    lock_time = 1_735_096
+    lock_time = Height(1_735_096)
     memo = "This is a test transaction"
     amount = Amount.from_string("1.5")
     fee = Amount.from_string("0.01")
