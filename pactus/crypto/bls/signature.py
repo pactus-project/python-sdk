@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pactus.encoding import encoding
+
 from .bls12_381.bls_sig_g1 import aggregate_sigs
 from .bls12_381.serdesZ import deserialize, serialize
 
@@ -36,3 +38,12 @@ class Signature:
 
     def string(self) -> str:
         return self.raw_bytes().hex()
+
+    def encode(self) -> bytes:
+        return encoding.append_fixed_bytes(b"", self.raw_bytes())
+
+    @classmethod
+    def decode(cls, buf: bytes) -> tuple:
+        data, buf = encoding.read_fixed_bytes(buf, SIGNATURE_SIZE)
+        point_g1 = deserialize(data, is_ell2=False)
+        return cls(point_g1), buf

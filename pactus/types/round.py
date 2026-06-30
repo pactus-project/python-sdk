@@ -1,3 +1,6 @@
+from pactus.encoding import encoding
+
+
 class Round:
     """
     Round represents a consensus round in the Pactus blockchain.
@@ -19,3 +22,15 @@ class Round:
 
     def __str__(self) -> str:
         return str(self.value)
+
+    def encode(self) -> bytes:
+        return encoding.append_uint16(b"", self.value)
+
+    @classmethod
+    def decode(cls, buf: bytes) -> tuple:
+        """
+        Decode a Round from bytes.
+        Returns (Round, remaining_buf).
+        """
+        val, buf = encoding.read_uint16(buf)
+        return cls(val), buf

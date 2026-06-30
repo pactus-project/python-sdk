@@ -1,3 +1,6 @@
+from pactus.encoding import encoding
+
+
 class Height:
     """
     Height represents a block height in the Pactus blockchain.
@@ -20,3 +23,15 @@ class Height:
 
     def __str__(self) -> str:
         return str(self.value)
+
+    def encode(self) -> bytes:
+        return encoding.append_uint32(b"", self.value)
+
+    @classmethod
+    def decode(cls, buf: bytes) -> tuple:
+        """
+        Decode a Height from bytes.
+        Returns (Height, remaining_buf).
+        """
+        val, buf = encoding.read_uint32(buf)
+        return cls(val), buf

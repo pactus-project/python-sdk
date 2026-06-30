@@ -22,5 +22,14 @@ class PublicKey(ABC):
         pass
 
     @abstractmethod
+    def encode(self) -> bytes:
+        pass
+
+    @classmethod
+    @abstractmethod
+    def decode(cls, buf: bytes) -> tuple:
+        pass
+
+    @abstractmethod
     def verify(self, msg: str, sig: Signature) -> bool:
         pass

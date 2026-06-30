@@ -1,5 +1,7 @@
 import math
 
+from pactus.encoding import encoding
+
 NANO_PAC_PER_PAC = 1e9
 MAX_NANO_PAC = 42e6 * NANO_PAC_PER_PAC
 
@@ -17,8 +19,8 @@ class Amount:
     NanoPAC, you can use the `from_nano_pac` method.
     """
 
-    def __init__(self, amt: int = 0) -> None:
-        self.value = amt
+    def __init__(self, value: int = 0) -> None:
+        self.value = value
 
     def __eq__(self, other: "Amount") -> bool:
         if isinstance(other, Amount):
@@ -59,7 +61,7 @@ class Amount:
             msg = f"invalid PAC amount: {f}"
             raise ValueError(msg)
 
-        return cls.from_nano_pac(int(cls.round(f * NANO_PAC_PER_PAC)))
+        return cls.from_nano_pac(int(cls._round(f * NANO_PAC_PER_PAC)))
 
     @classmethod
     def from_string(cls, s: str) -> "Amount":
@@ -77,15 +79,23 @@ class Amount:
 
         return cls.from_pac(f)
 
-    def round(self: float) -> float:
-        """
-        Round converts a floating point number, which may or may not be representable
-        as an integer, to the Amount integer type by rounding to the nearest integer.
+    def encode(self) -> bytes:
+        buf = b""
+        return encoding.append_var_int(buf, self.value)
 
-        This is performed by adding or subtracting 0.5 depending on the sign, and
-        relying on integer truncation to round the value to the nearest Amount.
+    @classmethod
+    def decode(cls, buf: bytes) -> tuple:
         """
-        if self < 0:
-            return self - 0.5
+        Decode an Amount from bytes.
+        Returns (Amount, remaining_buf).
+        """
+        val, buf = encoding.read_var_int(buf)
+        return cls(val), buf
 
-        return self + 0.5
+    @staticmethod
+    def _round(f: float) -> float:
+        """Round to nearest integer, half away from zero."""
+        if f < 0:
+            return f - 0.5
+
+        return f + 0.5
