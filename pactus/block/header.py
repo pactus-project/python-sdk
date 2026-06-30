@@ -42,3 +42,11 @@ class Header:
             proposer_address,
         )
         return header, buf
+
+    def encode(self, buf: bytes) -> bytes:
+        buf = encoding.append_uint8(buf, self.version)
+        buf = encoding.append_uint32(buf, self.unix_time)
+        buf = self.prev_block_hash.encode(buf)
+        buf = self.state_root.encode(buf)
+        buf = encoding.append_fixed_bytes(buf, self.sortition_seed)
+        return self.proposer_address.encode(buf)

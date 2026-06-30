@@ -53,13 +53,7 @@ class Block:
         return hashlib.blake2b(buf, digest_size=32).digest()
 
     def _header_bytes(self) -> bytes:
-        h = self.header
-        buf = encoding.append_uint8(b"", h.version)
-        buf = encoding.append_uint32(buf, h.unix_time)
-        buf = h.prev_block_hash.encode(buf)
-        buf = h.state_root.encode(buf)
-        buf = encoding.append_fixed_bytes(buf, h.sortition_seed)
-        return h.proposer_address.encode(buf)
+        return self.header.encode(b"")
 
     def _txs_root(self) -> bytes:
         return Block._merkle_root([tx.id() for tx in self.transactions])
