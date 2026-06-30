@@ -12,9 +12,9 @@ class WithdrawPayload:
         self.amount = amount
 
     def encode(self, buf: list) -> None:
-        encoding.append_fixed_bytes(buf, self.from_addr.raw_bytes())
-        encoding.append_fixed_bytes(buf, self.to_addr.raw_bytes())
-        encoding.append_var_int(buf, self.amount.value)
+        encoding.append_fixed_bytes(buf, self.from_addr.encode())
+        encoding.append_fixed_bytes(buf, self.to_addr.encode())
+        encoding.append_fixed_bytes(buf, self.amount.encode())
 
     def get_type(self) -> PayloadType:
         return PayloadType.WITHDRAW

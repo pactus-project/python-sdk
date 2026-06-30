@@ -12,9 +12,9 @@ class TransferPayload:
         self.amount = amount
 
     def encode(self, buf: list) -> None:
-        encoding.append_fixed_bytes(buf, self.sender.raw_bytes())
-        encoding.append_fixed_bytes(buf, self.receiver.raw_bytes())
-        encoding.append_var_int(buf, self.amount.value)
+        encoding.append_fixed_bytes(buf, self.sender.encode())
+        encoding.append_fixed_bytes(buf, self.receiver.encode())
+        encoding.append_fixed_bytes(buf, self.amount.encode())
 
     def get_type(self) -> PayloadType:
         return PayloadType.TRANSFER

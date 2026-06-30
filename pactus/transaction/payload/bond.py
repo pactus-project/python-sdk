@@ -19,10 +19,10 @@ class BondPayload:
         self.stake = stake
 
     def encode(self, buf: list) -> None:
-        encoding.append_fixed_bytes(buf, self.sender.raw_bytes())
-        encoding.append_fixed_bytes(buf, self.receiver.raw_bytes())
+        encoding.append_fixed_bytes(buf, self.sender.encode())
+        encoding.append_fixed_bytes(buf, self.receiver.encode())
         encoding.append_fixed_bytes(buf, self.public_key)
-        encoding.append_var_int(buf, self.stake.value)
+        encoding.append_fixed_bytes(buf, self.stake.encode())
 
     def get_type(self) -> PayloadType:
         return PayloadType.BOND

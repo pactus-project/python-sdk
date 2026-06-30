@@ -9,7 +9,7 @@ class UnbondPayload:
         self.validator = validator
 
     def encode(self, buf: list) -> None:
-        encoding.append_fixed_bytes(buf, self.validator.raw_bytes())
+        encoding.append_fixed_bytes(buf, self.validator.encode())
 
     def get_type(self) -> PayloadType:
         return PayloadType.UNBOND
