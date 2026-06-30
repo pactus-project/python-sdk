@@ -1,5 +1,4 @@
 from pactus.crypto.address import Address
-from pactus.encoding import encoding
 from pactus.types.amount import Amount
 
 from ._payload import PayloadType
@@ -11,10 +10,10 @@ class TransferPayload:
         self.receiver = receiver
         self.amount = amount
 
-    def encode(self, buf: list) -> None:
-        encoding.append_fixed_bytes(buf, self.sender.encode())
-        encoding.append_fixed_bytes(buf, self.receiver.encode())
-        encoding.append_fixed_bytes(buf, self.amount.encode())
+    def encode(self, buf: bytes) -> bytes:
+        buf = self.sender.encode(buf)
+        buf = self.receiver.encode(buf)
+        return self.amount.encode(buf)
 
     def get_type(self) -> PayloadType:
         return PayloadType.TRANSFER

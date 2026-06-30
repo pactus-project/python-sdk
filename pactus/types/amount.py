@@ -79,8 +79,7 @@ class Amount:
 
         return cls.from_pac(f)
 
-    def encode(self) -> bytes:
-        buf = b""
+    def encode(self, buf: bytes) -> bytes:
         return encoding.append_var_int(buf, self.value)
 
     @classmethod

@@ -1,5 +1,4 @@
 from pactus.crypto.address import Address
-from pactus.encoding import encoding
 from pactus.types.amount import Amount
 
 from ._payload import PayloadType
@@ -11,10 +10,10 @@ class WithdrawPayload:
         self.to_addr = to_addr
         self.amount = amount
 
-    def encode(self, buf: list) -> None:
-        encoding.append_fixed_bytes(buf, self.from_addr.encode())
-        encoding.append_fixed_bytes(buf, self.to_addr.encode())
-        encoding.append_fixed_bytes(buf, self.amount.encode())
+    def encode(self, buf: bytes) -> bytes:
+        buf = self.from_addr.encode(buf)
+        buf = self.to_addr.encode(buf)
+        return self.amount.encode(buf)
 
     def get_type(self) -> PayloadType:
         return PayloadType.WITHDRAW

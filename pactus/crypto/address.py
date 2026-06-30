@@ -86,8 +86,7 @@ class Address:
     def is_validator_address(self) -> bool:
         return self.address_type() == AddressType.VALIDATOR
 
-    def encode(self) -> bytes:
-        buf = b""
+    def encode(self, buf: bytes) -> bytes:
         if self.is_treasury_address():
             return encoding.append_uint8(buf, AddressType.TREASURY.value)
         return encoding.append_fixed_bytes(buf, self.raw_bytes())

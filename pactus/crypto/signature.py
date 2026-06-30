@@ -18,7 +18,7 @@ class Signature(ABC):
         pass
 
     @abstractmethod
-    def encode(self) -> bytes:
+    def encode(self, buf: bytes) -> bytes:
         pass
 
     @classmethod

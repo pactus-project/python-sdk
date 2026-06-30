@@ -14,7 +14,7 @@ class PayloadType(Enum):
 
 class Payload(ABC):
     @abstractmethod
-    def encode(self, buf: list) -> None:
+    def encode(self, buf: bytes) -> bytes:
         """Append the payload data to the buffer."""
 
     @abstractmethod

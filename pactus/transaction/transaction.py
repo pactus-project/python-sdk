@@ -166,55 +166,28 @@ class Transaction:
         return cls(lock_time, fee, memo, payload)
 
     def _get_unsigned_bytes(self, buf: bytes) -> bytes:
-        """
-        Generate the unsigned representation of the transaction,
-        including flags and payload.
-
-        This method appends various transaction components to the buffer
-        in a specific order, ensuring correct serialization.
-        """
-        encoding.append_uint8(buf, self.flags)
-        encoding.append_uint8(buf, self.version)
-        encoding.append_uint32(buf, self.lock_time.value)
-        encoding.append_var_int(buf, self.fee.value)
-        encoding.append_str(buf, self.memo)
-        encoding.append_uint8(buf, self.payload.get_type().value)
-        self.payload.encode(buf)
-
-        return buf
+        """Generate the unsigned bytes of the transaction for signing."""
+        buf = encoding.append_uint8(buf, self.flags)
+        buf = encoding.append_uint8(buf, self.version)
+        buf = self.lock_time.encode(buf)
+        buf = self.fee.encode(buf)
+        buf = encoding.append_str(buf, self.memo)
+        buf = encoding.append_uint8(buf, self.payload.get_type().value)
+        return self.payload.encode(buf)
 
     def sign_bytes(self) -> bytes:
-        """
-        Generate the transaction data that needs to be signed.
-
-        The signature should be computed over this data, excluding the
-        transaction flags, which are removed before returning.
-        """
-        buf = bytearray()
-        sign_bytes = self._get_unsigned_bytes(buf)
-
-        return sign_bytes[1:]  # flags is not part of the sign bytes.
+        """Return the bytes to be signed (everything except flags)."""
+        buf = self._get_unsigned_bytes(b"")
+        return buf[1:]
 
     def sign(self, private_key: PrivateKey) -> bytes:
-        """
-        Generate the signed representation of the transaction,
-        including the flags, payload, and cryptographic signature.
-
-        This method first generates the data needs to be signed,
-        signs it using the provided private key, and then appends
-        both the signature and the corresponding public key to ensure
-        verifiability.
-        """
-        buf = bytearray()
-
-        sign_bytes = self._get_unsigned_bytes(buf)
-        sig = private_key.sign(
-            bytes(sign_bytes[1:]),
-        )
+        """Sign the transaction and return signed bytes."""
+        buf = self._get_unsigned_bytes(b"")
+        sig = private_key.sign(buf[1:])
         pub = private_key.public_key()
 
-        encoding.append_fixed_bytes(buf, sig.raw_bytes())
-        encoding.append_fixed_bytes(buf, pub.raw_bytes())
+        buf = sig.encode(buf)
+        buf = pub.encode(buf)
 
         self.public_key = pub
         self.signature = sig

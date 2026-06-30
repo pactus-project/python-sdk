@@ -61,8 +61,8 @@ class PublicKey:
             self.raw_bytes(),
         )
 
-    def encode(self) -> bytes:
-        return encoding.append_fixed_bytes(b"", self.raw_bytes())
+    def encode(self, buf: bytes) -> bytes:
+        return encoding.append_fixed_bytes(buf, self.raw_bytes())
 
     @classmethod
     def decode(cls, buf: bytes) -> tuple:

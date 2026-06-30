@@ -28,8 +28,8 @@ class Hash:
     def is_undef(self) -> bool:
         return self.data == bytes(HASH_SIZE)
 
-    def encode(self) -> bytes:
-        return encoding.append_fixed_bytes(b"", self.data)
+    def encode(self, buf: bytes) -> bytes:
+        return encoding.append_fixed_bytes(buf, self.data)
 
     @classmethod
     def decode(cls, buf: bytes) -> tuple[Hash, bytes]:

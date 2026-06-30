@@ -26,8 +26,8 @@ class Signature:
     def string(self) -> str:
         return self.sig.hex()
 
-    def encode(self) -> bytes:
-        return encoding.append_fixed_bytes(b"", self.sig)
+    def encode(self, buf: bytes) -> bytes:
+        return encoding.append_fixed_bytes(buf, self.sig)
 
     @classmethod
     def decode(cls, buf: bytes) -> tuple:

@@ -9,9 +9,9 @@ class SortitionPayload:
         self.address = address
         self.proof = proof
 
-    def encode(self, buf: list) -> None:
-        encoding.append_fixed_bytes(buf, self.address.encode())
-        encoding.append_fixed_bytes(buf, self.proof)
+    def encode(self, buf: bytes) -> bytes:
+        buf = self.address.encode(buf)
+        return encoding.append_fixed_bytes(buf, self.proof)
 
     def get_type(self) -> PayloadType:
         return PayloadType.SORTITION

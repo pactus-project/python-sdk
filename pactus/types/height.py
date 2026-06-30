@@ -24,8 +24,8 @@ class Height:
     def __str__(self) -> str:
         return str(self.value)
 
-    def encode(self) -> bytes:
-        return encoding.append_uint32(b"", self.value)
+    def encode(self, buf: bytes) -> bytes:
+        return encoding.append_uint32(buf, self.value)
 
     @classmethod
     def decode(cls, buf: bytes) -> tuple:
