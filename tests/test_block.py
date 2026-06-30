@@ -7,6 +7,8 @@ from pactus.transaction.payload import PayloadType
 
 class TestBlockDecode(unittest.TestCase):
     def test_decode_block_from_raw(self):
+        # Block number of 888
+        #  https://pactusscan.com/block/888
         raw_hex = (
             "019094b165"
             "84fdb8aac442735c6d4d4457e2236cd6ca86cb0b898ab37a03be1723b8faac55"
@@ -62,6 +64,12 @@ class TestBlockDecode(unittest.TestCase):
             cert.signature.string(),
             "8da0b181eaa433b5c9855a89de0f0c7530ec4d2c3aecff290af7ae02b33dd968"
             "43d6f72983bf25ce856946df1360710f",
+        )
+
+        # --- Block ID ---
+        self.assertEqual(
+            block.id.hex(),
+            "3fad130499227f7a83d4e65873b0f880db275a6c4d1b9dd65005c1f1667ec98f",
         )
 
         # --- Transactions ---

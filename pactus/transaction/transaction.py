@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+
 from pactus.crypto.address import Address, AddressType
 from pactus.crypto.bls.public_key import PublicKey as BLSPublicKey
 from pactus.crypto.bls.signature import Signature as BLSSignature
@@ -181,6 +183,10 @@ class Transaction:
         """Return the bytes to be signed (everything except flags)."""
         buf = self._get_unsigned_bytes(b"")
         return buf[1:]
+
+    def id(self) -> bytes:
+        """Return the transaction ID (blake2b-256 of sign bytes)."""
+        return hashlib.blake2b(self.sign_bytes(), digest_size=32).digest()
 
     def sign(self, private_key: PrivateKey) -> bytes:
         """Sign the transaction and return signed bytes."""

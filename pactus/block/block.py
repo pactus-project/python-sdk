@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import hashlib
+import struct
+
 from pactus.encoding import encoding
 from pactus.transaction import Transaction
 
@@ -38,3 +41,53 @@ class Block:
             transactions.append(tx)
 
         return cls(header, prev_cert, transactions)
+
+    @property
+    def id(self) -> bytes:
+        """Return the block ID (blake2b-256 of header + cert_hash + tx_root + tx_count)."""
+        buf = self._header_bytes()
+        if self.prev_cert is not None:
+            buf += self.prev_cert.hash()
+        buf += self._txs_root()
+        buf += struct.pack("<i", len(self.transactions))
+        return hashlib.blake2b(buf, digest_size=32).digest()
+
+    def _header_bytes(self) -> bytes:
+        h = self.header
+        buf = encoding.append_uint8(b"", h.version)
+        buf = encoding.append_uint32(buf, h.unix_time)
+        buf = h.prev_block_hash.encode(buf)
+        buf = h.state_root.encode(buf)
+        buf = encoding.append_fixed_bytes(buf, h.sortition_seed)
+        return h.proposer_address.encode(buf)
+
+    def _txs_root(self) -> bytes:
+        return Block._merkle_root([tx.id() for tx in self.transactions])
+
+    @staticmethod
+    def _merkle_root(hashes: list) -> bytes:
+        if not hashes:
+            return bytes(32)
+
+        # Build simple merkle tree
+        n = 1
+        while n < len(hashes):
+            n <<= 1
+
+        tree = [None] * (n * 2 - 1)
+        for i, h in enumerate(hashes):
+            tree[i] = h
+
+        offset = n
+        for i in range(0, len(tree) - 1, 2):
+            left = tree[i]
+            right = tree[i + 1]
+            if left is None:
+                tree[offset] = None
+            elif right is None:
+                tree[offset] = hashlib.blake2b(left + left, digest_size=32).digest()
+            else:
+                tree[offset] = hashlib.blake2b(left + right, digest_size=32).digest()
+            offset += 1
+
+        return tree[-1] or bytes(32)

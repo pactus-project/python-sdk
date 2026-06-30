@@ -1,3 +1,5 @@
+import hashlib
+
 from pactus.crypto.bls.signature import Signature
 from pactus.encoding import encoding
 from pactus.types.height import Height
@@ -44,3 +46,16 @@ class Certificate:
 
         cert = cls(height, round_, committers, absentees, signature)
         return cert, buf
+
+    def hash(self) -> bytes:
+        """Return the certificate hash (blake2b-256 of encoded bytes)."""
+        buf = self.height.encode(b"")
+        buf = self.round.encode(buf)
+        buf = encoding.append_var_int(buf, len(self.committers))
+        for n in self.committers:
+            buf = encoding.append_var_int(buf, n)
+        buf = encoding.append_var_int(buf, len(self.absentees))
+        for n in self.absentees:
+            buf = encoding.append_var_int(buf, n)
+        buf = self.signature.encode(buf)
+        return hashlib.blake2b(buf, digest_size=32).digest()
