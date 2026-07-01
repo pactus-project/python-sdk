@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import struct
 
+from pactus.crypto.hash import Hash
 from pactus.encoding import encoding
 from pactus.transaction import Transaction
 
@@ -43,20 +44,20 @@ class Block:
         return cls(header, prev_cert, transactions)
 
     @property
-    def id(self) -> bytes:
+    def id(self) -> Hash:
         """Return the block ID (blake2b-256 of header + cert_hash + tx_root + tx_count)."""
         buf = self._header_bytes()
         if self.prev_cert is not None:
             buf += self.prev_cert.hash()
         buf += self._txs_root()
         buf += struct.pack("<i", len(self.transactions))
-        return hashlib.blake2b(buf, digest_size=32).digest()
+        return Hash(hashlib.blake2b(buf, digest_size=32).digest())
 
     def _header_bytes(self) -> bytes:
         return self.header.encode(b"")
 
     def _txs_root(self) -> bytes:
-        return Block._merkle_root([tx.id() for tx in self.transactions])
+        return Block._merkle_root([tx.id().data for tx in self.transactions])
 
     @staticmethod
     def _merkle_root(hashes: list) -> bytes:

@@ -68,7 +68,7 @@ class TestBlockDecode(unittest.TestCase):
 
         # --- Block ID ---
         self.assertEqual(
-            block.id.hex(),
+            str(block.id),
             "5a12881b1d5fd9bea3a61f24d7555d8900e85d02e9606b5a3176edf3c355a32d",
         )
 
