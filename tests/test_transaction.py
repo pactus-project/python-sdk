@@ -101,7 +101,7 @@ class TestTransactionDecode(unittest.TestCase):
         self.assertIsNotNone(tx.public_key)
 
         # Transaction ID
-        self.assertEqual(tx.id().hex(), expected_txid)
+        self.assertEqual(str(tx.id()), expected_txid)
 
         # Sign bytes
         self.assertEqual(tx.sign_bytes().hex(), expected_sign_bytes)
@@ -154,7 +154,7 @@ class TestTransactionDecode(unittest.TestCase):
         self.assertIsNotNone(tx.public_key)
 
         # Transaction ID
-        self.assertEqual(tx.id().hex(), expected_txid)
+        self.assertEqual(str(tx.id()), expected_txid)
 
         # Sign bytes
         self.assertEqual(tx.sign_bytes().hex(), expected_sign_bytes)
