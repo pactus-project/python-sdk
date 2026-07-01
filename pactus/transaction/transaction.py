@@ -7,6 +7,7 @@ from pactus.crypto.bls.public_key import PublicKey as BLSPublicKey
 from pactus.crypto.bls.signature import Signature as BLSSignature
 from pactus.crypto.ed25519.public_key import PublicKey as Ed25519PublicKey
 from pactus.crypto.ed25519.signature import Signature as Ed25519Signature
+from pactus.crypto.hash import Hash
 from pactus.crypto.private_key import PrivateKey
 from pactus.crypto.public_key import PublicKey
 from pactus.crypto.secp256k1.public_key import PublicKey as Secp256k1PublicKey
@@ -184,9 +185,9 @@ class Transaction:
         buf = self._get_unsigned_bytes(b"")
         return buf[1:]
 
-    def id(self) -> bytes:
+    def id(self) -> Hash:
         """Return the transaction ID (blake2b-256 of sign bytes)."""
-        return hashlib.blake2b(self.sign_bytes(), digest_size=32).digest()
+        return Hash(hashlib.blake2b(self.sign_bytes(), digest_size=32).digest())
 
     def sign(self, private_key: PrivateKey) -> bytes:
         """Sign the transaction and return signed bytes."""
