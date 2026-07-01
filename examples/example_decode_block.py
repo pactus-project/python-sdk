@@ -8,9 +8,6 @@ This example demonstrates how to:
 2. Fetch blockchain info and pick a random block height
 3. Retrieve a block data and decode the block using pactus-sdk
 4. Print the block's details, including header, previous certificate, and transactions.
-
-Usage:
-    python sdk_example.py
 """
 
 import asyncio
