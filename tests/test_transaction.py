@@ -3,6 +3,7 @@ import unittest
 from pactus.crypto.address import Address
 from pactus.crypto.bls import PrivateKey
 from pactus.transaction import Transaction
+from pactus.transaction.payload import PayloadType
 from pactus.types.amount import Amount
 from pactus.types.height import Height
 
@@ -52,6 +53,111 @@ class TestTransaction(unittest.TestCase):
             + "8094ebdc03"  # Amount
         )
         self.assertEqual(expected_sign_bytes, sign_bytes.hex())
+
+
+class TestTransactionDecode(unittest.TestCase):
+    def test_decode_transfer_tx(self):
+        # https://pactusscan.com/transaction/1b6b7226f7935a15f05371d1a1fefead585a89704ce464b7cc1d453d299d235f
+        signed_data_hex = (
+            "000124a3230080ade2040b77616c6c65742d636f726501"
+            "037098338e0b6808119dfd4457ab806b9c2059b89b"
+            "037a14ae24533816e7faaa6ed28fcdde8e55a7df21"
+            "8084af5f"
+            "4ed8fee3d8992e82660dd05bbe8608fc56ceabffdeeee61e3213b9b49d33a0fc"
+            "8dea6d79ee7ec60f66433f189ed9b3c50b2ad6fa004e26790ee736693eda8506"
+            "95794161374b22c696dabb98e93f6ca9300b22f3b904921fbf560bb72145f4fa"
+        )
+        expected_txid = "1b6b7226f7935a15f05371d1a1fefead585a89704ce464b7cc1d453d299d235f"
+        expected_sign_bytes = (
+            "0124a3230080ade2040b77616c6c65742d636f726501"
+            "037098338e0b6808119dfd4457ab806b9c2059b89b"
+            "037a14ae24533816e7faaa6ed28fcdde8e55a7df21"
+            "8084af5f"
+        )
+
+        raw = bytes.fromhex(signed_data_hex)
+        tx, _ = Transaction.decode(raw)
+
+        self.assertEqual(tx.version, 1)
+        self.assertEqual(tx.lock_time.value, 2335524)
+        self.assertEqual(tx.fee.value, 10000000)
+        self.assertEqual(tx.memo, "wallet-core")
+        self.assertEqual(tx.payload.get_type(), PayloadType.TRANSFER)
+
+        # Transfer payload fields
+        pld = tx.payload
+        self.assertEqual(
+            pld.sender.string(),
+            "pc1rwzvr8rstdqypr80ag3t6hqrtnss9nwymcxy3lr",
+        )
+        self.assertEqual(
+            pld.receiver.string(),
+            "pc1r0g22ufzn8qtw0742dmfglnw73e260hep0k3yra",
+        )
+        self.assertEqual(pld.amount.value, 200000000)
+
+        # Signature and public key
+        self.assertIsNotNone(tx.signature)
+        self.assertIsNotNone(tx.public_key)
+
+        # Transaction ID
+        self.assertEqual(str(tx.id()), expected_txid)
+
+        # Sign bytes
+        self.assertEqual(tx.sign_bytes().hex(), expected_sign_bytes)
+
+    def test_decode_bond_tx(self):
+        # https://pactusscan.com/transaction/f83f583a5c40adf93a90ea536a7e4b467d30ca4f308d5da52624d80c42adec80
+        signed_data_hex = (
+            "00015ca3230080ade2040b77616c6c65742d636f726502"
+            "037098338e0b6808119dfd4457ab806b9c2059b89b"
+            "01d2fa2a7d560502199995ea260954f064d90278be"
+            "00"
+            "8094ebdc03"
+            "9e6279fb64067c7d7316ac74630bbb8589df268aa4548f1c7d85c087a8748ff0"
+            "715b9149afbd94c5d8ee6b37c787ec63e963cbb38be513ebc436aa58f9a8f00d"
+            "95794161374b22c696dabb98e93f6ca9300b22f3b904921fbf560bb72145f4fa"
+        )
+        expected_txid = "f83f583a5c40adf93a90ea536a7e4b467d30ca4f308d5da52624d80c42adec80"
+        expected_sign_bytes = (
+            "015ca3230080ade2040b77616c6c65742d636f726502"
+            "037098338e0b6808119dfd4457ab806b9c2059b89b"
+            "01d2fa2a7d560502199995ea260954f064d90278be"
+            "00"
+            "8094ebdc03"
+        )
+
+        raw = bytes.fromhex(signed_data_hex)
+        tx, _ = Transaction.decode(raw)
+
+        self.assertEqual(tx.version, 1)
+        self.assertEqual(tx.lock_time.value, 2335580)
+        self.assertEqual(tx.fee.value, 10000000)
+        self.assertEqual(tx.memo, "wallet-core")
+        self.assertEqual(tx.payload.get_type(), PayloadType.BOND)
+
+        # Bond payload fields
+        pld = tx.payload
+        self.assertEqual(
+            pld.sender.string(),
+            "pc1rwzvr8rstdqypr80ag3t6hqrtnss9nwymcxy3lr",
+        )
+        self.assertEqual(
+            pld.receiver.string(),
+            "pc1p6taz5l2kq5ppnxv4agnqj48svnvsy797xpe6wd",
+        )
+        self.assertEqual(pld.stake.value, 1000000000)
+        self.assertIsNone(pld.public_key)
+
+        # Signature and public key
+        self.assertIsNotNone(tx.signature)
+        self.assertIsNotNone(tx.public_key)
+
+        # Transaction ID
+        self.assertEqual(str(tx.id()), expected_txid)
+
+        # Sign bytes
+        self.assertEqual(tx.sign_bytes().hex(), expected_sign_bytes)
 
 
 if __name__ == "__main__":
