@@ -32,7 +32,7 @@ class Hash:
         return encoding.append_fixed_bytes(buf, self.data)
 
     @classmethod
-    def decode(cls, buf: bytes) -> tuple[Hash, bytes]:
+    def decode(cls, buf: bytes) -> tuple:
         """
         Decode a Hash from bytes.
         Returns (Hash, remaining_buf).
